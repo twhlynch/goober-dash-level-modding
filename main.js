@@ -236,6 +236,10 @@ function generatePixelArt() {
                     const b = imageData.data[index + 2];
                     const a = imageData.data[index + 3];
 
+                    if (a === 0) {
+                        continue;
+                    }
+
                     let bestMatch = undefined;
                     let bestMatchDistance = Infinity;
                     let secondMatch = undefined;
