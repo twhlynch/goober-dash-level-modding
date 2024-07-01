@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Goober Dash Level Modding!</h1>
+        <p>
+            A bunch of silly little scripts to generate maps for Goober Dash.
+        </p>
+    </header>
+    <section>
+        <div class="tool">
+            <h2>Grid</h2>
+            <p>
+                Create a grid with a specified number of rows and columns.
+            </p>
+            <label for="grid-size-x">Rows:</label>
+            <input type="range" name="grid-size-x" id="grid-size-x" min="1" max="100" value="10">
+            <label for="grid-size-y">Columns:</label>
+            <input type="range" name="grid-size-y" id="grid-size-y" min="1" max="100" value="10">
+            <label for="grid-size-gap">Gap:</label>
+            <input type="range" name="grid-size-gap" id="grid-size-gap" min="1" max="100" value="1">
+            <button id="generate-grid">Generate Grid</button>
+        </div>
+        <img src="examples/grid.png">
+    </section>
+    <section>
+        <div class="tool">
+            <h2>Pixel Art</h2>
+            <p>
+                Upload an image to convert it into pixel art.
+            </p>
+            <label for="pixel-art-size-x">Width:</label>
+            <input type="range" name="pixel-art-size-x" id="pixel-art-size-x" min="1" max="100" value="10">
+            <label for="pixel-art-size-y">Height:</label>
+            <input type="range" name="pixel-art-size-y" id="pixel-art-size-y" min="1" max="100" value="10">
+            <label for="pixel-art-image">Image:</label>
+            <input type="file" name="pixel-art-image" id="pixel-art-image">
+            <label for="pixel-art-optimise">Optimise:</label>
+            <input type="checkbox" name="pixel-art-optimise" id="pixel-art-optimise">
+            <button id="generate-pixel-art">Generate Pixel Art</button>
+        </div>
+        <img src="examples/pixel_art.png">
+    </section>
+    <footer>
+        <p>Created by <a href="https://github.com/twhlynch">.index</a></p>
+    </footer>
+</body>
+</html>
