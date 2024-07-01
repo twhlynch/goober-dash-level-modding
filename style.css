@@ -41,10 +41,10 @@ section {
 
     img {
         width: 80%;
-        height: 80%;
+        height: auto;
         opacity: 0.8;
         border-radius: 5px;
-        object-fit: cover;
+        object-fit: contain;
         margin: auto;
     }
 }
@@ -184,4 +184,15 @@ a {
 
 a:hover {
     background-size: 100% 100%;
+}
+
+@media only screen and (max-width: 768px) {
+    section {
+        grid-template-columns: 1fr;
+        gap: 1em;
+
+        img {
+            max-width: 400px;
+        }
+    }
 }

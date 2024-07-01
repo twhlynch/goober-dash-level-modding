@@ -191,6 +191,23 @@ function generatePixelArt() {
     const ySize = parseInt(document.getElementById("pixel-art-size-y").value);
     const file = document.getElementById("pixel-art-image").files[0];
     const optimise = document.getElementById("pixel-art-optimise").checked;
+    const doubleLayer = document.getElementById("pixel-art-double-layer").checked;
+
+    const noPixel = [
+        "physics_block", // lag
+        "start" // min 3x3
+    ];
+    const noOptimise = [
+        "background3", // no scale y
+        "laser", // no scale
+        "checkpoint", // no scale y
+        "finish_line", // no scale y
+        "floor", // no scale y
+        "pit", // no scale y
+        "music_block", // no scale
+        "recharger", // no scale
+        "sign", // no scale
+    ];
 
     const canvas = document.createElement("canvas");
     canvas.width = xSize;
@@ -221,27 +238,16 @@ function generatePixelArt() {
 
                     let bestMatch = undefined;
                     let bestMatchDistance = Infinity;
+                    let secondMatch = undefined;
 
                     for (let type in nodeTypeColors) {
-                        if ([
-                            "physics_block", // lag
-                            "start" // min 3x3
-                        ].includes(type)) {
+                        if (noPixel.includes(type)) {
                             continue;
                         }
-                        if (optimise && [
-                            "background3", // no scale y
-                            "laser", // no scale
-                            "checkpoint", // no scale y
-                            "finish_line", // no scale y
-                            "floor", // no scale y
-                            "pit", // no scale y
-                            "music_block", // no scale
-                            "recharger", // no scale
-                            "sign", // no scale
-                        ].includes(type)){
+                        if (optimise && noOptimise.includes(type)){
                             continue;
                         }
+
                         const color = nodeTypeColors[type];
                         const distance = Math.sqrt(
                             Math.pow(color.r - r, 2) +
@@ -257,9 +263,50 @@ function generatePixelArt() {
 
                     // compare to combinations
 
+                    if (doubleLayer) {
+                        for (let type1 in nodeTypeColors) {
+                            for (let type2 in nodeTypeColors) {
+                                if (noPixel.includes(type1) || noPixel.includes(type2)) {
+                                    continue;
+                                }
+                                if (optimise && (noOptimise.includes(type1) || noOptimise.includes(type2))) {
+                                    continue;
+                                }
+
+                                const color1 = nodeTypeColors[type1];
+                                const color2 = nodeTypeColors[type2];
+                                const color = {
+                                    "r": (color1.r + color2.r) / 2,
+                                    "g": (color1.g + color2.g) / 2,
+                                    "b": (color1.b + color2.b) / 2
+                                }
+                                const distance = Math.sqrt(
+                                    Math.pow(color.r - r, 2) +
+                                    Math.pow(color.g - g, 2) +
+                                    Math.pow(color.b - b, 2)
+                                );
+                                
+                                if (distance < bestMatchDistance) {
+                                    bestMatch = type1;
+                                    secondMatch = type2;
+                                    bestMatchDistance = distance;
+                                }
+
+                            }
+                        }
+                    }
+
                     if (bestMatch) {
                         const node = new Node();
                         node.type = bestMatch;
+                        node.x = x;
+                        node.y = y;
+                        pixelNodes.push(node);
+                    }
+
+                    if (secondMatch) {
+                        const node = new Node();
+                        node.type = secondMatch;
                         node.x = x;
                         node.y = y;
                         pixelNodes.push(node);
