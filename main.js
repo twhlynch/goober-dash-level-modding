@@ -52,9 +52,10 @@ class Node {
         this.rotation = 0,
         this.shape_rotation = 0,
         this.type = "block"
+        this.properties = undefined;
     }
     get() {
-        return {
+        let json = {
             "x": this.x,
             "y": this.y,
             "height": this.height,
@@ -65,6 +66,10 @@ class Node {
             "shape_rotation": this.shape_rotation,
             "type": this.type
         }
+        if (this.properties) {
+            json.properties = this.properties;
+        }
+        return json;
     }
 }
 
@@ -338,6 +343,22 @@ function generatePixelArt() {
     reader.readAsDataURL(file);
 }
 
+function generateImpossibleGravity() {
+    const strength = parseInt(document.getElementById("impossible-gravity-strength").value);
+
+    const level = new Level();
+
+    const node = new Node();
+    node.type = "gravity_field";
+    node.properties = {
+        "rotation": 0,
+        "strength": strength
+    };
+    level.add(node);
+
+    level.save();
+}
+
 //#region runtime
 
 init();
@@ -346,3 +367,4 @@ init();
 
 document.getElementById("generate-grid").addEventListener("click", generateGrid);
 document.getElementById("generate-pixel-art").addEventListener("click", generatePixelArt);
+document.getElementById("generate-impossible-gravity").addEventListener("click", generateImpossibleGravity);
