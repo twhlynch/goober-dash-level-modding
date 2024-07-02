@@ -163,6 +163,15 @@ const nodeTypeColors = {
 //#region setup
 
 function init() {
+    // sliders
+    const sliders = document.querySelectorAll("input[type=range]");
+    for (let i = 0; i < sliders.length; i++) {
+        const slider = sliders[i];
+        slider.addEventListener("input", () => {
+            slider.setAttribute("value", slider.value);
+        });
+    }
+
     /* Generate average colors for nodeTypeColors
     for (let type in nodeTypeColors) {
         const filename = "sprites/" + type + ".png";

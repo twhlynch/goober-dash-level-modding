@@ -43,14 +43,24 @@
     <script src="main.js" defer></script>
 </head>
 <body>
+    <nav>
+        <a href="#grid">Grid</a>
+        <a href="#pixel">Pixel Art</a>
+        <a href="#gravity">Gravity</a>
+        <a href="#scale">Scale</a>
+        <a href="#mirror">Mirror</a>
+    </nav>
     <header>
-        <h1>Goober Dash Level Modding!</h1>
+        <div>
+            <h1>Goober Dash Level Modding!</h1>
+            <img src="favicon.png" alt="logo">
+        </div>
         <p>
             A bunch of silly little scripts to generate levels for <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>. Please don't rely on these tools being consistent or accurate as they may lose or break details of their outputs.
         </p>
     </header>
     <section>
-        <div class="tool">
+        <div class="tool" id="grid">
             <h2>Grid</h2>
             <p>
                 Create a grid with a specified number of rows and columns.
@@ -66,7 +76,7 @@
         <img src="examples/grid.png">
     </section>
     <section>
-        <div class="tool">
+        <div class="tool" id="pixel">
             <h2>Pixel Art</h2>
             <p>
                 Upload an image to convert it into pixel art.
@@ -75,18 +85,24 @@
             <input type="range" name="pixel-art-size-x" id="pixel-art-size-x" min="1" max="100" value="10">
             <label for="pixel-art-size-y">Height:</label>
             <input type="range" name="pixel-art-size-y" id="pixel-art-size-y" min="1" max="100" value="10">
-            <label for="pixel-art-image">Image:</label>
-            <input type="file" name="pixel-art-image" id="pixel-art-image">
-            <label for="pixel-art-optimise">Optimise:</label>
-            <input type="checkbox" name="pixel-art-optimise" id="pixel-art-optimise">
-            <label for="pixel-art-double-layer">Double layer:</label>
-            <input type="checkbox" name="pixel-art-double-layer" id="pixel-art-double-layer">
+            <div class="checkbox" style="display: none;">
+                <input type="checkbox" name="pixel-art-optimise" id="pixel-art-optimise">
+                <label for="pixel-art-optimise">Optimise:</label>
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="pixel-art-double-layer" id="pixel-art-double-layer">
+                <label for="pixel-art-double-layer">Double layer</label>
+            </div>
+            <div class="file">
+                <label for="pixel-art-image">Image:</label>
+                <input type="file" name="pixel-art-image" id="pixel-art-image">
+            </div>
             <button id="generate-pixel-art">Generate Pixel Art</button>
         </div>
         <img src="examples/pixel_art2.png">
     </section>
     <section>
-        <div class="tool">
+        <div class="tool" id="gravity">
             <h2>Impossible Gravity</h2>
             <p>
                 Generate a Gravity Field with strength over 5.
@@ -98,37 +114,51 @@
         <img src="examples/impossible_gravity.png">
     </section>
     <section>
-        <div class="tool">
+        <div class="tool" id="scale">
             <h2>Scale Level</h2>
             <p>
                 Scale up an entire level.
             </p>
             <label for="scale-level-scale">Scale:</label>
             <input type="range" name="scale-level-scale" id="scale-level-scale" min="2" max="100" value="2">
-            <label for="scale-level-level">JSON Level File:</label>
-            <input type="file" name="scale-level-level" id="scale-level-level">
+            <div class="file">
+                <label for="scale-level-level">JSON Level File:</label>
+                <input type="file" name="scale-level-level" id="scale-level-level">
+            </div>
             <button id="modify-scale-level">Scale Level</button>
         </div>
         <img src="examples/scale_level.png">
     </section>
     <section>
-        <div class="tool">
+        <div class="tool" id="mirror">
             <h2>Mirror Level</h2>
             <p>
                 Mirror a level horizontally and/or vertically.
             </p>
-            <label for="mirror-level-vertical">Vertical:</label>
-            <input type="checkbox" name="mirror-level-vertical" id="mirror-level-vertical">
-            <label for="mirror-level-horizontal">Horizontal:</label>
-            <input type="checkbox" name="mirror-level-horizontal" id="mirror-level-horizontal">
-            <label for="mirror-level-level">JSON Level File:</label>
-            <input type="file" name="mirror-level-level" id="mirror-level-level">
+            <div class="checkbox">
+                <div class="checkbox">
+                    <input type="checkbox" name="mirror-level-vertical" id="mirror-level-vertical">
+                    <label for="mirror-level-vertical">Vertical</label>
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="mirror-level-horizontal" id="mirror-level-horizontal">
+                    <label for="mirror-level-horizontal">Horizontal</label>
+                </div>
+            </div>
+            <div class="file">
+                <label for="mirror-level-level">JSON Level File:</label>
+                <input type="file" name="mirror-level-level" id="mirror-level-level">
+            </div>
             <button id="modify-mirror-level">Scale Level</button>
         </div>
         <img src="examples/mirror_level.png">
     </section>
     <footer>
-        <p>Created by <a href="https://github.com/twhlynch" target="_blank">.index</a></p>
+        <p>
+            Created by <a href="https://github.com/twhlynch" target="_blank">.index</a>
+            <br>
+            Not affiliated with <a href="http://winterpixel.io" target="_blank">Winterpixel</a> or <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>.
+        </p>
     </footer>
 </body>
 </html>
