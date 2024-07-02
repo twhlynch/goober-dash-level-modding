@@ -1,9 +1,9 @@
 //#region classes
 
 class Level {
-    constructor() {
+    constructor(json = undefined) {
         this.metadata = {
-            "author_id": "9813d89a-5a4d-40ea-9214-0f8a7b321936",
+            "author_id": "",
             "author_name": "",
             "game_mode": "Race",
             "id": "",
@@ -16,6 +16,12 @@ class Level {
             "type": 0
         }
         this.nodes = [];
+        if (json) {
+            this.metadata = json.metadata;
+            for (const node of json.nodes) {
+                this.add(new Node(node));
+            }
+        }
     }
     get() {
         const jsonNodes = [];
@@ -42,7 +48,7 @@ class Level {
 }
 
 class Node {
-    constructor() {
+    constructor(json = undefined) {
         this.x = 0,
         this.y = 0,
         this.height = 1,
@@ -52,7 +58,13 @@ class Node {
         this.rotation = 0,
         this.shape_rotation = 0,
         this.type = "block"
-        this.properties = undefined;
+        this.properties = {};
+
+        if (json) {
+            for (const key in json) {
+                this[key] = json[key];
+            }
+        }
     }
     get() {
         let json = {
@@ -410,6 +422,54 @@ function generateImpossibleGravity() {
     level.save();
 }
 
+function modifyMirrorLevel() {
+    const vertical = document.getElementById("mirror-level-vertical").checked;
+    const horizontal = document.getElementById("mirror-level-horizontal").checked;
+    const file = document.getElementById("mirror-level-level").files[0];
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const level = new Level(levelJSON);
+
+        level.nodes.forEach(node => {
+            if (vertical) {
+                node.y = -node.y - node.height;
+                node.rotation += 180;
+            }
+            if (horizontal) {
+                node.x = -node.x - node.width;
+            }
+        });
+
+        level.save();
+    }
+    reader.readAsText(file);
+}
+
+function modifyScaleLevel() {
+    const scale = parseInt(document.getElementById("scale-level-scale").value);
+    const file = document.getElementById("scale-level-level").files[0];
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const level = new Level(levelJSON);
+
+        level.nodes.forEach(node => {
+            node.x *= scale;
+            node.y *= scale;
+            node.width *= scale;
+            node.height *= scale;
+        });
+
+        level.save();
+    }
+    reader.readAsText(file);
+}
+
 //#region runtime
 
 init();
@@ -419,3 +479,5 @@ init();
 document.getElementById("generate-grid").addEventListener("click", generateGrid);
 document.getElementById("generate-pixel-art").addEventListener("click", generatePixelArt);
 document.getElementById("generate-impossible-gravity").addEventListener("click", generateImpossibleGravity);
+document.getElementById("modify-scale-level").addEventListener("click", modifyScaleLevel);
+document.getElementById("modify-mirror-level").addEventListener("click", modifyMirrorLevel);

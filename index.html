@@ -46,7 +46,7 @@
     <header>
         <h1>Goober Dash Level Modding!</h1>
         <p>
-            A bunch of silly little scripts to generate levels for <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>.
+            A bunch of silly little scripts to generate levels for <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>. Please don't rely on these tools being consistent or accurate as they may lose or break details of their outputs.
         </p>
     </header>
     <section>
@@ -96,6 +96,36 @@
             <button id="generate-impossible-gravity">Generate Gravity Field</button>
         </div>
         <img src="examples/impossible_gravity.png">
+    </section>
+    <section>
+        <div class="tool">
+            <h2>Scale Level</h2>
+            <p>
+                Scale up an entire level.
+            </p>
+            <label for="scale-level-scale">Scale:</label>
+            <input type="range" name="scale-level-scale" id="scale-level-scale" min="2" max="100" value="2">
+            <label for="scale-level-level">JSON Level File:</label>
+            <input type="file" name="scale-level-level" id="scale-level-level">
+            <button id="modify-scale-level">Scale Level</button>
+        </div>
+        <img src="examples/scale_level.png">
+    </section>
+    <section>
+        <div class="tool">
+            <h2>Mirror Level</h2>
+            <p>
+                Mirror a level horizontally and/or vertically.
+            </p>
+            <label for="mirror-level-vertical">Vertical:</label>
+            <input type="checkbox" name="mirror-level-vertical" id="mirror-level-vertical">
+            <label for="mirror-level-horizontal">Horizontal:</label>
+            <input type="checkbox" name="mirror-level-horizontal" id="mirror-level-horizontal">
+            <label for="mirror-level-level">JSON Level File:</label>
+            <input type="file" name="mirror-level-level" id="mirror-level-level">
+            <button id="modify-mirror-level">Scale Level</button>
+        </div>
+        <img src="examples/mirror_level.png">
     </section>
     <footer>
         <p>Created by <a href="https://github.com/twhlynch" target="_blank">.index</a></p>
