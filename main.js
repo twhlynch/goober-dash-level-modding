@@ -58,7 +58,9 @@ class Node {
         this.rotation = 0,
         this.shape_rotation = 0,
         this.type = "block"
+
         this.properties = {};
+        this.animation = {};
 
         if (json) {
             for (const key in json) {
@@ -80,6 +82,9 @@ class Node {
         }
         if (this.properties) {
             json.properties = this.properties;
+        }
+        if (this.animation) {
+            json.animation = this.animation;
         }
         return json;
     }
