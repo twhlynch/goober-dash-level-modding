@@ -22,6 +22,7 @@ class Level {
                 this.add(new Node(node));
             }
         }
+        console.log(this.get());
     }
     get() {
         const jsonNodes = [];
@@ -80,10 +81,11 @@ class Node {
             "shape_rotation": this.shape_rotation,
             "type": this.type
         }
-        if (this.properties) {
+        // NOTE: {} != {} is true
+        if (this.properties && Object.keys(this.properties).length !== 0) {
             json.properties = this.properties;
         }
-        if (this.animation) {
+        if (this.animation && Object.keys(this.animation).length !== 0) {
             json.animation = this.animation;
         }
         return json;
@@ -335,70 +337,10 @@ function generatePixelArt() {
                 }
             }
 
-            // optimise neighbors (scuffed)
+            // optimise neighbors
 
             if (optimise) {
-                const nodeGrid = Array.from({ length: ySize }, () => Array(xSize).fill(null));
-                pixelNodes.forEach(node => {
-                    nodeGrid[node.y][node.x] = node;
-                });
-            
-                const visited = new Set();
-                const mergedNodes = [];
-            
-                function getNeighbors(x, y) {
-                    const neighbors = [];
-                    if (x > 0) neighbors.push({ x: x - 1, y });
-                    if (x < xSize - 1) neighbors.push({ x: x + 1, y });
-                    if (y > 0) neighbors.push({ x, y: y - 1 });
-                    if (y < ySize - 1) neighbors.push({ x, y: y + 1 });
-                    return neighbors;
-                }
-            
-                function floodFill(x, y, type) {
-                    const stack = [{ x, y }];
-                    const region = [];
-            
-                    while (stack.length) {
-                        const { x, y } = stack.pop();
-                        const key = `${x},${y}`;
-                        if (!visited.has(key) && nodeGrid[y][x] && nodeGrid[y][x].type === type) {
-                            visited.add(key);
-                            region.push({ x, y });
-                            getNeighbors(x, y).forEach(({ x: nx, y: ny }) => stack.push({ x: nx, y: ny }));
-                        }
-                    }
-            
-                    return region;
-                }
-            
-                for (let y = 0; y < ySize; y++) {
-                    for (let x = 0; x < xSize; x++) {
-                        const node = nodeGrid[y][x];
-                        if (node && !visited.has(`${x},${y}`)) {
-                            const region = floodFill(x, y, node.type);
-                            if (region.length > 1) {
-                                const minX = Math.min(...region.map(n => n.x));
-                                const maxX = Math.max(...region.map(n => n.x));
-                                const minY = Math.min(...region.map(n => n.y));
-                                const maxY = Math.max(...region.map(n => n.y));
-            
-                                const mergedNode = new Node();
-                                mergedNode.type = node.type;
-                                mergedNode.x = Math.round((minX + maxX) / 2);
-                                mergedNode.y = Math.round((minY + maxY) / 2);
-                                mergedNode.width = maxX - minX + 1;
-                                mergedNode.height = maxY - minY + 1;
-                                mergedNodes.push(mergedNode);
-                            } else {
-                                mergedNodes.push(node);
-                            }
-                        }
-                    }
-                }
-            
-                pixelNodes.length = 0;
-                pixelNodes.push(...mergedNodes);
+                // TODO: flood fill
             }
 
             pixelNodes.forEach(node => {
@@ -439,12 +381,38 @@ function modifyMirrorLevel() {
         const level = new Level(levelJSON);
 
         level.nodes.forEach(node => {
+            if (node.animation?.tween_sequences?.position) {
+                node.animation.tween_sequences.position.tweens.forEach(tween => {
+                    if (tween.value_type === 5) { // 5 is translate
+                        if (vertical) {
+                            tween.value_y = -tween.value_y;
+                        }
+                        if (horizontal) {
+                            tween.value_x = -tween.value_x;
+                        }
+                    }
+                });
+            }
+            if (node.animation?.tween_sequences?.rotation_degrees) {
+                node.animation.tween_sequences.rotation_degrees.tweens.forEach(tween => {
+                    if (tween.value_type === 3) { // 3 is rotate
+                        tween.value = -tween.value;
+                    }
+                });
+            }
+
             if (vertical) {
                 node.y = -node.y - node.height;
                 node.rotation += 180;
+                node.pivot_y = 1 - node.pivot_y;
             }
             if (horizontal) {
                 node.x = -node.x - node.width;
+                node.rotation = -node.rotation;
+                node.pivot_x = 1 - node.pivot_x;
+            }
+            if (node.type.includes("ramp")) {
+                node.shape_rotation = 3 - node.shape_rotation; // 0, 1, 2, 3
             }
         });
 
@@ -469,6 +437,7 @@ function modifyScaleLevel() {
             node.width *= scale;
             node.height *= scale;
         });
+        // TODO: fix non-y-scalable nodes floating
 
         level.save();
     }
