@@ -57,7 +57,7 @@ section {
     }
 }
 
-section:nth-child(2) {
+header + section {
     border-top: 1px solid var(--color-highlight);
 }
 
