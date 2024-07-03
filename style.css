@@ -69,6 +69,8 @@ nav {
     justify-content: center;
     margin-bottom: 1em;
     gap: 1.5em;
+    row-gap: 0;
+    flex-wrap: wrap;
 
     a {
         color: var(--color-secondary);
