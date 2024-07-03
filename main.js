@@ -183,6 +183,22 @@ function init() {
         });
     }
 
+    // advanced pixel art options
+    const advancedOptions = document.getElementById("pixel-art-advanced-options");
+    const advancedCheckbox = document.getElementById("pixel-art-advanced");
+    advancedCheckbox.addEventListener("change", () => {
+        advancedOptions.style.display = advancedCheckbox.checked? "grid" : "none";
+    });
+
+    for (let type of nodeTypes) {
+        advancedOptions.innerHTML += `
+        <div class="checkbox">
+            <input type="checkbox" name="pixel-art-advanced-${type}" id="pixel-art-advanced-${type}">
+            <label for="pixel-art-advanced-${type}">${type.replaceAll("_", " ")}</label>
+        </div>
+        `;
+    }
+
     /* Generate average colors for nodeTypeColors
     for (let type in nodeTypeColors) {
         const filename = "sprites/" + type + ".png";
@@ -233,6 +249,16 @@ function generatePixelArt() {
     const optimise = document.getElementById("pixel-art-optimise").checked;
     const doubleLayer = document.getElementById("pixel-art-double-layer").checked;
     const backgroundOnly = document.getElementById("pixel-art-background").checked;
+    const advanced = document.getElementById("pixel-art-advanced");
+
+    const selectedAdvancedOptions = [];
+    nodeTypes.forEach(type => {
+        const typeOption = document.getElementById("pixel-art-advanced-" + type);
+
+        if (typeOption && typeOption.checked) {
+            selectedAdvancedOptions.push(type);
+        }
+    });
 
     const noPixel = [
         "physics_block", // lag
@@ -287,14 +313,20 @@ function generatePixelArt() {
                     let secondMatch = undefined;
 
                     for (let type in nodeTypeColors) {
-                        if (noPixel.includes(type)) {
-                            continue;
-                        }
-                        if (optimise && noOptimise.includes(type)){
-                            continue;
-                        }
-                        if (backgroundOnly && !backgrounds.includes(type)) {
-                            continue;
+                        if (advanced) {
+                            if (!selectedAdvancedOptions.includes(type)) {
+                                continue;
+                            }
+                        } else {
+                            if (noPixel.includes(type)) {
+                                continue;
+                            }
+                            if (optimise && noOptimise.includes(type)){
+                                continue;
+                            }
+                            if (backgroundOnly && !backgrounds.includes(type)) {
+                                continue;
+                            }
                         }
 
                         const color = nodeTypeColors[type];
@@ -315,14 +347,20 @@ function generatePixelArt() {
                     if (doubleLayer) {
                         for (let type1 in nodeTypeColors) {
                             for (let type2 in nodeTypeColors) {
-                                if (noPixel.includes(type1) || noPixel.includes(type2)) {
-                                    continue;
-                                }
-                                if (optimise && (noOptimise.includes(type1) || noOptimise.includes(type2))) {
-                                    continue;
-                                }
-                                if (backgroundOnly && !backgrounds.includes(type)) {
-                                    continue;
+                                if (advanced) {
+                                    if (!selectedAdvancedOptions.includes(type1) || !selectedAdvancedOptions.includes(type2)) {
+                                        continue;
+                                    }
+                                } else {
+                                    if (noPixel.includes(type1) || noPixel.includes(type2)) {
+                                        continue;
+                                    }
+                                    if (optimise && (noOptimise.includes(type1) || noOptimise.includes(type2))) {
+                                        continue;
+                                    }
+                                    if (backgroundOnly && (!backgrounds.includes(type1) || !backgrounds.includes(type2))) {
+                                        continue;
+                                    }
                                 }
 
                                 const color1 = nodeTypeColors[type1];
