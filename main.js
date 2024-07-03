@@ -7,7 +7,7 @@ class Level {
             "author_name": "",
             "game_mode": "Race",
             "id": "",
-            "name": "New GDLM Level",
+            "name": "",
             "player_count": 0,
             "published": "Private",
             "rating": 0,
@@ -40,7 +40,7 @@ class Level {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "GDLM-" + new Date().getTime() + ".json";
+        a.download = "GDLM-" + new Date().getTime().toString().substring(6, 9) + " " + this.metadata.name + ".json";
         a.click();
     }
     add(node) {
@@ -211,6 +211,7 @@ function generateGrid() {
         }
     }
 
+    level.metadata.name = "Grid";
     level.save();
 }
 
@@ -355,6 +356,8 @@ function generatePixelArt() {
             pixelNodes.forEach(node => {
                 level.add(node);
             });
+            
+            level.metadata.name = "Pixel Art";
             level.save();
         }
         image.src = data;
@@ -375,6 +378,7 @@ function generateImpossibleGravity() {
     };
     level.add(node);
 
+    level.metadata.name = "Gravity";
     level.save();
 }
 
@@ -425,6 +429,7 @@ function modifyMirrorLevel() {
             }
         });
 
+        level.metadata.name += " Mirrored";
         level.save();
     }
     reader.readAsText(file);
@@ -445,9 +450,102 @@ function modifyScaleLevel() {
             node.y *= scale;
             node.width *= scale;
             node.height *= scale;
+
+            if (node.animation?.tween_sequences?.position) {
+                node.animation.tween_sequences.position.tweens.forEach(tween => {
+                    if (tween.value_type === 5) {
+                        tween.value_x *= scale;
+                        tween.value_y *= scale;
+                    }
+                });
+            }
         });
         // TODO: fix non-y-scalable nodes floating
 
+        level.metadata.name += " Scaled";
+        level.save();
+    }
+    reader.readAsText(file);
+}
+
+function modifySpeedLevel() {
+    const speed = parseInt(document.getElementById("speed-level-speed").value);
+    const file = document.getElementById("speed-level-level").files[0];
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const level = new Level(levelJSON);
+
+        level.nodes.forEach(node => {
+            if (node.animation?.tween_sequences?.position) {
+                node.animation.tween_sequences.position.total_duration /= speed;
+                node.animation.tween_sequences.position.tweens.forEach(tween => {
+                    tween.duration /= speed;
+                });
+            }
+            if (node.animation?.tween_sequences?.rotation_degrees) {
+                node.animation.tween_sequences.rotation_degrees.total_duration /= speed;
+                node.animation.tween_sequences.rotation_degrees.tweens.forEach(tween => {
+                    tween.duration /= speed;
+                });
+            }
+        });
+
+        level.metadata.name += " Sped Up";
+        level.save();
+    }
+    reader.readAsText(file);
+}
+
+function modifyRandomizeLevel() {
+    const file = document.getElementById("random-level-level").files[0];
+
+    const noRandom = [
+        "start",
+        "finish_line", 
+        "gravity_field",
+        "jump_zone"
+    ];
+
+    const filteredTypes = nodeTypes.filter(type => !["start","finish_line"].includes(type));
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const level = new Level(levelJSON);
+
+        level.nodes.forEach(node => {
+            if (!noRandom.includes(node.type)) {
+                node.type = filteredTypes[Math.floor(Math.random() * filteredTypes.length)];
+            }
+        });
+
+        level.metadata.name += " Randomized";
+        level.save();
+    }
+    reader.readAsText(file);
+}
+
+function modifyGravityLevel() {
+    const strength = parseInt(document.getElementById("gravity-level-strength").value);
+    const file = document.getElementById("gravity-level-level").files[0];
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const level = new Level(levelJSON);
+
+        level.nodes.forEach(node => {
+            if (node.type === "gravity_field") {
+                node.properties.strength = strength;
+            }
+        });
+
+        level.metadata.name += " Gravity Boost";
         level.save();
     }
     reader.readAsText(file);
@@ -464,3 +562,6 @@ document.getElementById("generate-pixel-art").addEventListener("click", generate
 document.getElementById("generate-impossible-gravity").addEventListener("click", generateImpossibleGravity);
 document.getElementById("modify-scale-level").addEventListener("click", modifyScaleLevel);
 document.getElementById("modify-mirror-level").addEventListener("click", modifyMirrorLevel);
+document.getElementById("modify-speed-level").addEventListener("click", modifySpeedLevel);
+document.getElementById("modify-random-level").addEventListener("click", modifyRandomizeLevel);
+document.getElementById("modify-gravity-level").addEventListener("click", modifyGravityLevel);

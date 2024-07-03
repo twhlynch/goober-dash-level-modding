@@ -153,6 +153,52 @@
         </div>
         <img src="examples/mirror_level.png">
     </section>
+    <section>
+        <div class="tool" id="speed">
+            <h2>Speed Up Animations</h2>
+            <p>
+                Speed up all animations in a level.
+            </p>
+            <label for="speed-level-speed">Speed:</label>
+            <input type="range" name="speed-level-speed" id="speed-level-speed" min="2" max="100" value="2">
+            <div class="file">
+                <label for="speed-level-level">JSON Level File:</label>
+                <input type="file" name="speed-level-level" id="speed-level-level">
+            </div>
+            <button id="modify-speed-level">Speed Up</button>
+        </div>
+        <img src="examples/speed_level.png">
+    </section>
+    <section>
+        <div class="tool" id="random">
+            <h2>Randomize objects</h2>
+            <p>
+                Randomly swap out all the object types in a level.
+            </p>
+            <div class="file">
+                <label for="random-level-level">JSON Level File:</label>
+                <input type="file" name="random-level-level" id="random-level-level">
+            </div>
+            <button id="modify-random-level">Randomize</button>
+        </div>
+        <img src="examples/random_level.png">
+    </section>
+    <section>
+        <div class="tool" id="gravityApply">
+            <h2>Apply Gravity</h2>
+            <p>
+                Apply an impossible gravity strength to all fields in a level.
+            </p>
+            <label for="gravity-level-strength">Strength:</label>
+            <input type="range" name="gravity-level-strength" id="gravity-level-strength" min="1" max="1000" value="10">
+            <div class="file">
+                <label for="gravity-level-level">JSON Level File:</label>
+                <input type="file" name="gravity-level-level" id="gravity-level-level">
+            </div>
+            <button id="modify-gravity-level">Apply Gravity</button>
+        </div>
+        <img src="examples/gravity_level.png">
+    </section>
     <footer>
         <p>
             Created by <a href="https://github.com/twhlynch" target="_blank">.index</a>
