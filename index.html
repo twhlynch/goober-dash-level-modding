@@ -57,6 +57,7 @@
         <a href="#random">Random</a>
         <a href="#gravityApply">Gravity apply</a>
         <a href="#swap">Swap</a>
+        <a href="#separate">Separate</a>
         <a href="#details">Details</a>
         <a href="#help">Help</a>
     </nav>
@@ -192,7 +193,7 @@
     </section>
     <section>
         <div class="tool" id="random">
-            <h2>Randomize objects</h2>
+            <h2>Randomize Objects</h2>
             <p>
                 Randomly swap out all the object types in a level.
             </p>
@@ -222,7 +223,7 @@
     </section>
     <section>
         <div class="tool" id="swap">
-            <h2>Swap types</h2>
+            <h2>Swap Types</h2>
             <p>
                 Swap all objects of one type to another.
             </p>
@@ -245,6 +246,20 @@
             <button id="modify-swap-level">Swap</button>
         </div>
         <img src="examples/swap_level.png">
+    </section>
+    <section>
+        <div class="tool" id="separate">
+            <h2>Separate Objects</h2>
+            <p>
+                Stop all objects from merging textures.
+            </p>
+            <div class="file">
+                <label for="separate-level-level">JSON Level File:</label>
+                <input type="file" name="separate-level-level" id="separate-level-level">
+            </div>
+            <button id="modify-separate-level">Separate</button>
+        </div>
+        <img src="examples/separate_level.png">
     </section>
     <section>
         <div class="tool" id="details">

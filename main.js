@@ -644,6 +644,31 @@ function modifySwapLevel() {
     reader.readAsText(file);
 }
 
+function modifySeparateLevel() {
+    const file = document.getElementById("separate-level-level").files[0];
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const level = new Level(levelJSON);
+
+        level.nodes.forEach(node => {
+            if (Object.keys(node.animation).length == 0) {
+                node.animation = {
+                    "offset": 0,
+                    "repeat": true,
+                    "tween_sequences": {}
+                }
+            }
+        });
+
+        level.metadata.name += " Separated";
+        level.save();
+    }
+    reader.readAsText(file);
+}
+
 function getLevelDetails() {
     const file = document.getElementById("details-level").files[0];
     const output = document.getElementById("details-output");
@@ -706,3 +731,4 @@ document.getElementById("modify-speed-level").addEventListener("click", modifySp
 document.getElementById("modify-random-level").addEventListener("click", modifyRandomizeLevel);
 document.getElementById("modify-gravity-level").addEventListener("click", modifyGravityLevel);
 document.getElementById("modify-swap-level").addEventListener("click", modifySwapLevel);
+document.getElementById("modify-separate-level").addEventListener("click", modifySeparateLevel);
