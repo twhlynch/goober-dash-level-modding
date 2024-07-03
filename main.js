@@ -232,6 +232,7 @@ function generatePixelArt() {
     const file = document.getElementById("pixel-art-image").files[0];
     const optimise = document.getElementById("pixel-art-optimise").checked;
     const doubleLayer = document.getElementById("pixel-art-double-layer").checked;
+    const backgroundOnly = document.getElementById("pixel-art-background").checked;
 
     const noPixel = [
         "physics_block", // lag
@@ -248,6 +249,7 @@ function generatePixelArt() {
         "recharger", // no scale
         "sign", // no scale
     ];
+    const backgrounds = nodeTypes.filter(type => type.includes("background"));
 
     const canvas = document.createElement("canvas");
     canvas.width = xSize;
@@ -291,6 +293,9 @@ function generatePixelArt() {
                         if (optimise && noOptimise.includes(type)){
                             continue;
                         }
+                        if (backgroundOnly && !backgrounds.includes(type)) {
+                            continue;
+                        }
 
                         const color = nodeTypeColors[type];
                         const distance = Math.sqrt(
@@ -314,6 +319,9 @@ function generatePixelArt() {
                                     continue;
                                 }
                                 if (optimise && (noOptimise.includes(type1) || noOptimise.includes(type2))) {
+                                    continue;
+                                }
+                                if (backgroundOnly && !backgrounds.includes(type)) {
                                     continue;
                                 }
 
