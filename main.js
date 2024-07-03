@@ -249,7 +249,7 @@ function generatePixelArt() {
     const optimise = document.getElementById("pixel-art-optimise").checked;
     const doubleLayer = document.getElementById("pixel-art-double-layer").checked;
     const backgroundOnly = document.getElementById("pixel-art-background").checked;
-    const advanced = document.getElementById("pixel-art-advanced");
+    const advanced = document.getElementById("pixel-art-advanced").checked;
 
     const selectedAdvancedOptions = [];
     nodeTypes.forEach(type => {
