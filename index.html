@@ -55,6 +55,7 @@
         <a href="#speed">Speed</a>
         <a href="#random">Random</a>
         <a href="#gravityApply">Gravity apply</a>
+        <a href="#details">Details</a>
     </nav>
     <header>
         <div>
@@ -204,6 +205,34 @@
             <button id="modify-gravity-level">Apply Gravity</button>
         </div>
         <img src="examples/gravity_level.png">
+    </section>
+    <section>
+        <div class="tool" id="details">
+            <h2>Level Details</h2>
+            <p>
+                View details and stats about the content of a level.
+            </p>
+            <div class="file">
+                <label for="details-level">JSON Level File:</label>
+                <input type="file" name="details-level" id="details-level">
+            </div>
+        </div>
+        <div id="details-output">
+            <div>
+                <span id="details-name"></span>
+                <span id="details-author_name"></span>
+                <div>
+                    <span id="details-player_count"></span>
+                    <span id="details-game_mode"></span>
+                    <span id="details-theme"></span>
+                </div>
+            </div>
+            <div>
+                <span id="details-nodes"></span>
+                <span id="details-animations"></span>
+                <span id="details-nodes-by-type"></span>
+            </div>
+        </div>
     </section>
     <footer>
         <p>

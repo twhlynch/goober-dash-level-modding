@@ -311,6 +311,91 @@ a:hover {
     color: var(--color-background);
 }
 
+/* details output */
+
+#details-output {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-block: 1em;
+}
+#details-output > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-block: 1em;
+}
+
+#details-name {
+    color: var(--color-primary);
+    text-shadow: 2px 2px 0 var(--color-highlight);
+    line-height: 1.2;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+    letter-spacing: -.02em;
+    font-size: 2.6em;
+}
+
+#details-author_name {
+    color: var(--color-secondary);
+    font-weight: 500;
+    margin-bottom: 0.2em;
+    letter-spacing: -.02em;
+    font-size: 1.4em;
+}
+
+#details-player_count {
+    color: var(--color-secondary);
+    font-weight: 500;
+    margin-bottom: 0.2em;
+    letter-spacing: -.02em;
+    font-size: 1em;
+}
+
+#details-game_mode {
+    color: var(--color-secondary);
+    font-weight: 500;
+    margin-bottom: 0.2em;
+    letter-spacing: -.02em;
+    font-size: 1em;
+}
+
+#details-theme {
+    color: var(--color-secondary);
+    font-weight: 500;
+    margin-bottom: 0.2em;
+    letter-spacing: -.02em;
+    font-size: 1em;
+}
+
+#details-nodes, #details-animations {
+    color: var(--color-secondary);
+    font-weight: 500;
+    margin-bottom: 0.2em;
+    letter-spacing: -.02em;
+    font-size: 1.2em;
+}
+
+#details-nodes-by-type {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 0.4em;
+    margin-inline: 0.2em;
+
+    > span {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        border: 2px solid var(--color-highlight);
+        background: #8d85e430;
+        border-radius: 5px;
+    }
+}
+
 @media only screen and (max-width: 768px) {
     section {
         grid-template-columns: 1fr;

@@ -562,11 +562,58 @@ function modifyGravityLevel() {
     reader.readAsText(file);
 }
 
-//#region runtime
+function getLevelDetails() {
+    const file = document.getElementById("details-level").files[0];
+    const output = document.getElementById("details-output");
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const level = new Level(levelJSON);
+
+        for (const key in level.metadata) {
+            const element = document.getElementById(`details-${key}`);
+
+            if (element) {
+                element.innerText = level.metadata[key];
+            }
+        }
+
+        const statistics = {
+            "nodes": 0,
+            "nodesByType": {},
+            "animations": 0
+        };
+
+        for (const node of level.nodes) {
+            statistics.nodes++;
+            if (statistics.nodesByType[node.type]) {
+                statistics.nodesByType[node.type]++;
+            } else {
+                statistics.nodesByType[node.type] = 1;
+            }
+            if (node.animation && Object.keys(node.animation).length !== 0) {
+                statistics.animations++;
+            }
+        }
+
+        document.getElementById("details-nodes").innerText = statistics.nodes + " objects";
+        document.getElementById("details-animations").innerText = statistics.animations + " animation" + (statistics.animations == 1 ? "" : "s");
+        document.getElementById("details-nodes-by-type").innerHTML = "";
+        for (const type in statistics.nodesByType) {
+            document.getElementById("details-nodes-by-type").innerHTML += "<span><span>" + type.replaceAll("_", " ") + "</span><span>" + statistics.nodesByType[type] + "</span></span> ";
+        }
+
+    }
+    reader.readAsText(file);
+}
+
+//#region runtime events
 
 init();
 
-//#region events
+document.getElementById("details-level").addEventListener("change", getLevelDetails);
 
 document.getElementById("generate-grid").addEventListener("click", generateGrid);
 document.getElementById("generate-pixel-art").addEventListener("click", generatePixelArt);
