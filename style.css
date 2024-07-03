@@ -83,11 +83,14 @@ nav {
         font-size: 1.2em;
         letter-spacing: 0.05em;
         padding: 0.5em 1em;
-        background: none;
+        background-position: 20% 70%;
+        background-size: 0 5%;
     }
 
     a:hover {
         color: var(--color-highlight);
+        background-size: 60% 5%;
+        background-position: 40% 70%;
     }
 }
 
@@ -252,15 +255,15 @@ input[type="file"] {
 a {
     color: var(--color-highlight);
     text-decoration: none;
-    background-image: linear-gradient(150deg, transparent 0%, transparent 50%, var(--color-highlight) 100%);
-    background-size: 0 100%;
+    background-image: linear-gradient(90deg, var(--color-highlight) 0%, transparent 100%);
+    background-size: 0 10%;
     background-repeat: no-repeat;
-    background-position: 100%;
+    background-position: 0 90%;
     transition: background-size 0.2s ease-in-out;
 }
 
 a:hover {
-    background-size: 100% 100%;
+    background-size: 100% 10%;
 }
 
 .checkbox, .file {
