@@ -38,6 +38,28 @@ body {
     height: 100svh;
 }
 
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(images/scribble.png);
+    background-repeat: repeat;
+    z-index: -2;
+    mask: linear-gradient(45deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.5) 100%);
+    opacity: 0.1;
+    animation: scroll-bg 300s linear infinite;
+}
+@keyframes scroll-bg {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: -1000% 1000%;
+    }
+}
+
 section {
     margin: 0 auto;
     width: min(100%, 1000px);
