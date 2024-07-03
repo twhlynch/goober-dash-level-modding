@@ -172,6 +172,17 @@ function init() {
         });
     }
 
+    //To top
+    const toTop = document.getElementById("toTop");
+    if (toTop) {
+        toTop.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    }
+
     /* Generate average colors for nodeTypeColors
     for (let type in nodeTypeColors) {
         const filename = "sprites/" + type + ".png";

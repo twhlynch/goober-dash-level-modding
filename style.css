@@ -8,6 +8,10 @@
     --color-highlight: #8d85e4;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -268,6 +272,40 @@ a:hover {
 }
 .file label {
     margin: 0;
+}
+
+.to-top {
+    background: none;
+    border: none;
+    position: fixed;
+    bottom: .75em;
+    right: 1.75em;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 100%;
+    transition: background-color .3s ease-in-out;
+    z-index: 9999;
+    cursor: pointer;
+}
+.to-top div {
+    --icon: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 24 24' display='inline-block' height='1.2em' width='1.2em' vertical-align='text-bottom' xmlns='http://www.w3.org/2000/svg' %3E%3Cpath fill='currentColor' d='M13 7.828V20h-2V7.828l-5.364 5.364l-1.414-1.414L12 4l7.778 7.778l-1.414 1.414z'/%3E%3C/svg%3E");
+    -webkit-mask: var(--icon) no-repeat;
+    mask: var(--icon) no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    background-color: currentColor;
+    color: inherit;
+    display: inline-block;
+    vertical-align: text-bottom;
+    color: var(--color-highlight);
+    width: 100%;
+    height: 100%;
+    opacity: .6;
+    transition: color .3s ease-in-out;
+}
+.to-top:hover div {
+    opacity: 1;
+    color: var(--color-background);
 }
 
 @media only screen and (max-width: 768px) {
