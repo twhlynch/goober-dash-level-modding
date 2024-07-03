@@ -199,6 +199,19 @@ function init() {
         `;
     }
 
+    // options for swap from and to
+    const from = document.getElementById("swap-level-from");
+    const to = document.getElementById("swap-level-to");
+
+    for (let type of nodeTypes) {
+        from.innerHTML += `
+        <option value="${type}">${type.replaceAll("_", " ")}</option>
+        `;
+        to.innerHTML += `
+        <option value="${type}">${type.replaceAll("_", " ")}</option>
+        `;
+    }
+
     /* Generate average colors for nodeTypeColors
     for (let type in nodeTypeColors) {
         const filename = "sprites/" + type + ".png";
@@ -608,6 +621,29 @@ function modifyGravityLevel() {
     reader.readAsText(file);
 }
 
+function modifySwapLevel() {
+    const from = document.getElementById("swap-level-from").value;
+    const to = document.getElementById("swap-level-to").value;
+    const file = document.getElementById("swap-level-level").files[0];
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const level = new Level(levelJSON);
+
+        level.nodes.forEach(node => {
+            if (node.type === from) {
+                node.type = to;
+            }
+        });
+
+        level.metadata.name += " Swapped";
+        level.save();
+    }
+    reader.readAsText(file);
+}
+
 function getLevelDetails() {
     const file = document.getElementById("details-level").files[0];
     const output = document.getElementById("details-output");
@@ -669,3 +705,4 @@ document.getElementById("modify-mirror-level").addEventListener("click", modifyM
 document.getElementById("modify-speed-level").addEventListener("click", modifySpeedLevel);
 document.getElementById("modify-random-level").addEventListener("click", modifyRandomizeLevel);
 document.getElementById("modify-gravity-level").addEventListener("click", modifyGravityLevel);
+document.getElementById("modify-swap-level").addEventListener("click", modifySwapLevel);

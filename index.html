@@ -56,6 +56,7 @@
         <a href="#speed">Speed</a>
         <a href="#random">Random</a>
         <a href="#gravityApply">Gravity apply</a>
+        <a href="#swap">Swap</a>
         <a href="#details">Details</a>
         <a href="#help">Help</a>
     </nav>
@@ -169,7 +170,7 @@
                 <label for="mirror-level-level">JSON Level File:</label>
                 <input type="file" name="mirror-level-level" id="mirror-level-level">
             </div>
-            <button id="modify-mirror-level">Scale Level</button>
+            <button id="modify-mirror-level">Mirror Level</button>
         </div>
         <img src="examples/mirror_level.png">
     </section>
@@ -218,6 +219,32 @@
             <button id="modify-gravity-level">Apply Gravity</button>
         </div>
         <img src="examples/gravity_level.png">
+    </section>
+    <section>
+        <div class="tool" id="swap">
+            <h2>Swap types</h2>
+            <p>
+                Swap all objects of one type to another.
+            </p>
+            <div>
+                <label for="swap-level-from">From:</label>
+                <select name="swap-level-from" id="swap-level-from">
+                    
+                </select>
+            </div>
+            <div>
+                <label for="swap-level-to">To:</label>
+                <select name="swap-level-to" id="swap-level-to">
+                    
+                </select>
+            </div>
+            <div class="file">
+                <label for="swap-level-level">JSON Level File:</label>
+                <input type="file" name="swap-level-level" id="swap-level-level">
+            </div>
+            <button id="modify-swap-level">Swap</button>
+        </div>
+        <img src="examples/swap_level.png">
     </section>
     <section>
         <div class="tool" id="details">
