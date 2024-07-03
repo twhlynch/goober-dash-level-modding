@@ -212,6 +212,17 @@ function init() {
         `;
     }
 
+    //images for help
+    const blockDefs = document.getElementById("block-defs");
+    for (let type of nodeTypes) {
+        blockDefs.innerHTML += `
+        <span>
+            <span>${type.replaceAll("_", " ")}</span>
+            <img src="sprites/${type}.png" alt="${type}">
+        </span>
+        `;
+    }
+
     /* Generate average colors for nodeTypeColors
     for (let type in nodeTypeColors) {
         const filename = "sprites/" + type + ".png";
