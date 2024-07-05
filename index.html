@@ -58,6 +58,7 @@
         <a href="#gravityApply">Gravity apply</a>
         <a href="#swap">Swap</a>
         <a href="#separate">Separate</a>
+        <a href="#text">Text</a>
         <a href="#details">Details</a>
         <a href="#help">Help</a>
     </nav>
@@ -260,6 +261,22 @@
             <button id="modify-separate-level">Separate</button>
         </div>
         <img src="examples/separate_level.png">
+    </section>
+    <section>
+        <div class="tool" id="text">
+            <h2>Block Text</h2>
+            <p>
+                Turn text into block text or customize the font yourself.
+            </p>
+            <a id="text-download-font" href="data/Font.json" download>Download font template</a>
+            <div class="file">
+                <label for="text-font-file">Custom Font File:</label>
+                <input type="file" name="text-font-file" id="text-font-file">
+            </div>
+            <textarea id="text-font-text" name="text-font-text" placeholder="Enter text"></textarea>
+            <button id="generate-text">Create Text</button>
+        </div>
+        <img src="examples/text.png">
     </section>
     <section>
         <div class="tool" id="details">

@@ -680,6 +680,112 @@ function modifySeparateLevel() {
     reader.readAsText(file);
 }
 
+async function generateBlockText() {
+    let file = document.getElementById("text-font-file").files[0];
+    const text = document.getElementById("text-font-text").value;
+
+    if (!file) {
+        const r = await fetch("data/Font.json");
+        file = await r.blob(); // perhaps a lil silly
+    }
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        let data = reader.result;
+        let levelJSON = JSON.parse(data);
+        const fontLevel = new Level(levelJSON);
+
+        const level = new Level();
+        
+        const characters = {
+            " ": {
+                "width": 1,
+                "nodes": []
+            }
+        };
+
+        let top = Infinity;
+        let bottom = -Infinity;
+
+        for (let node of fontLevel.nodes) {
+            if (node.type === "sign") {
+                if (node.y < top) {
+                    top = node.y;
+                }
+                if (node.y > bottom) {
+                    bottom = node.y;
+                }
+            }
+        }
+
+        const height = top - bottom - 2;
+
+        for (let node of fontLevel.nodes) {
+            if (node.type === "sign" && node.y === top && node.properties.message.length === 1) {
+                const letter = node.properties.message;
+                console.log("letter: " + letter);
+
+                let left = node.x;
+                let right = Infinity;
+                for (let node2 of fontLevel.nodes) {
+                    if (node2.type === "sign") {
+                        if (node2.x < right && node2.x > left) {
+                            right = node2.x;
+                        }
+                    }
+                }
+
+                const nodes = [];
+                for (let node2 of fontLevel.nodes) {
+                    if (node2.type !== "sign") {
+                        if (node2.x > left && node2.x < right && node2.y > top && node2.y < bottom) {
+                            const newNode = new Node(node2.get());
+                            newNode.x -= left;
+                            nodes.push(newNode);
+                        }
+                    }
+                }
+
+                const charWidth = right - left - 1;
+                characters[letter] = {
+                    width: charWidth,
+                    nodes: nodes
+                }
+
+            }
+        }
+
+        // create text
+
+        let currentPosition = 0;
+        let currentLine = 0;
+
+        for (let char of text) {
+            if (char === "\n") {
+                currentPosition = 0;
+                currentLine++;
+                continue;
+            }
+            let character = characters[char]
+                || characters[char.toLowerCase()]
+                || characters[char.toUpperCase()]
+                || characters[" "];
+
+            for (let node of character.nodes) {
+                let newNode = new Node(node.get());
+                newNode.x += currentPosition;
+                newNode.y -= currentLine * height;
+                level.add(newNode);
+            }
+            currentPosition += character.width + 1;
+        }
+
+        level.metadata.name = "Text";
+        level.save();
+    }
+    reader.readAsText(file);
+}
+
 function getLevelDetails() {
     const file = document.getElementById("details-level").files[0];
     const output = document.getElementById("details-output");
@@ -743,3 +849,4 @@ document.getElementById("modify-random-level").addEventListener("click", modifyR
 document.getElementById("modify-gravity-level").addEventListener("click", modifyGravityLevel);
 document.getElementById("modify-swap-level").addEventListener("click", modifySwapLevel);
 document.getElementById("modify-separate-level").addEventListener("click", modifySeparateLevel);
+document.getElementById("generate-text").addEventListener("click", generateBlockText);
