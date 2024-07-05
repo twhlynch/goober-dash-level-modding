@@ -723,7 +723,6 @@ async function generateBlockText() {
         for (let node of fontLevel.nodes) {
             if (node.type === "sign" && node.y === top && node.properties.message.length === 1) {
                 const letter = node.properties.message;
-                console.log("letter: " + letter);
 
                 let left = node.x;
                 let right = Infinity;
