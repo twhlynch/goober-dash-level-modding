@@ -54,6 +54,7 @@
         <a href="#pixel">Pixel Art</a>
         <a href="#text">Block Text</a>
         <a href="#mirror">Mirror</a>
+        <a href="#countdown">Countdown</a>
         <a href="#random">Randomize</a>
         <a href="#scale">Scale</a>
         <a href="#gravity">Gravity</a>
@@ -151,6 +152,20 @@
             <button id="modify-mirror-level">Mirror Level</button>
         </div>
         <img src="examples/mirror_level.png">
+    </section>
+    <section>
+        <div class="tool" id="countdown">
+            <h2>Countdown</h2>
+            <p>
+                Create a countdown from a number to 0.
+            </p>
+            <label for="countdown-start">Start Time:</label>
+            <input type="range" name="countdown-start" id="countdown-start" min="1" max="100" value="1">
+            <label for="countdown-speed">Speed:</label>
+            <input type="range" name="countdown-speed" id="countdown-speed" min="1" max="10" value="1">
+            <button id="generate-countdown">Generate Countdown</button>
+        </div>
+        <img src="examples/countdown.png">
     </section>
     <section>
         <div class="tool" id="random">

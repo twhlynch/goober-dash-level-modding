@@ -799,6 +799,124 @@ async function generateBlockText() {
     reader.readAsText(file);
 }
 
+function generateCountdown() {
+    const start = parseInt(document.getElementById("countdown-start").value);
+    const speed = parseInt(document.getElementById("countdown-speed").value);
+
+    const segments = [
+        { x: 1, y: 2, width: 3, height: 1 },
+        { x: 1, y: 2, width: 1, height: 3 },
+        { x: 3, y: 2, width: 1, height: 3 },
+        { x: 1, y: 4, width: 3, height: 1 },
+        { x: 1, y: 4, width: 1, height: 3 },
+        { x: 3, y: 4, width: 1, height: 3 },
+        { x: 1, y: 6, width: 3, height: 1 }
+    ];
+
+    const digits = [
+        [0, 1, 2, 4, 5, 6],
+        [1, 4],
+        [0, 2, 3, 4, 6],
+        [0, 2, 3, 5, 6],
+        [1, 2, 3, 5],
+        [0, 1, 3, 5, 6],
+        [0, 1, 3, 4, 5, 6],
+        [0, 2, 5],
+        [0, 1, 2, 3, 4, 5, 6],
+        [0, 1, 2, 3, 5, 6]
+    ];
+
+    const nodes = [];
+    const digitsCount = start.toString().length;
+    for (let i = 0; i < digitsCount; i++) {
+        nodes.push([]);
+    }
+
+    for (let segment of segments) {
+        for (let i = 0; i < digitsCount; i++) {
+            let node = new Node();
+            node.x = segment.x + i * 4;
+            node.y = segment.y;
+            node.width = segment.width;
+            node.height = segment.height;
+            node.type = "background";
+            node.animation = {
+                "offset": 0,
+                "repeat": false,
+                "tween_sequences": {
+                    "position": {
+                        "property": "position",
+                        "total_duration": start/speed + 2,
+                        "tweens": []
+                    }
+                }
+            }
+            nodes[i].push(node);
+        }
+    }
+
+    for (let time = start; time >= 0; time--) {
+        let timeString = time.toString().padStart(nodes.length, "-");
+        for (let charIndex in timeString) {
+            if (timeString[charIndex] === "-") {
+                continue;
+            }
+            let digitIndex = parseInt(timeString[charIndex]);
+            for (let segmentIndex in segments) {
+                let node = nodes[charIndex][segmentIndex];
+                if (digits[digitIndex].includes(parseInt(segmentIndex))) {
+                    node.animation.tween_sequences.position.tweens.push({
+                        "duration": 0,
+                        "ease_type": 0,
+                        "transition": 0,
+                        "value_type": 5,
+                        "value_x": 0,
+                        "value_y": 0
+                    });
+                } else {
+                    node.animation.tween_sequences.position.tweens.push({
+                        "duration": 0,
+                        "ease_type": 0,
+                        "transition": 0,
+                        "value_type": 5,
+                        "value_x": 0,
+                        "value_y": 10000
+                    });
+                }
+                node.animation.tween_sequences.position.tweens.push({
+                    "duration": 1/speed,
+                    "ease_type": 0,
+                    "transition": 0,
+                    "value_type": 0
+                });
+            }
+        }
+    }
+
+    for (let digit of nodes) {
+        for (let node of digit) {
+            node.animation.tween_sequences.position.tweens.push({
+                "duration": 0,
+                "ease_type": 0,
+                "transition": 0,
+                "value_type": 5,
+                "value_x": 0,
+                "value_y": 10000
+            });
+        }
+    }
+
+    const level = new Level();
+    for (let digit of nodes) {
+        for (let node of digit) {
+            level.add(node);
+        }
+    }
+
+    level.metadata.name = "Countdown";
+    level.save();
+}
+
 function getLevelDetails() {
     const file = document.getElementById("details-level").files[0];
     const output = document.getElementById("details-output");
@@ -863,3 +981,4 @@ document.getElementById("modify-gravity-level").addEventListener("click", modify
 document.getElementById("modify-swap-level").addEventListener("click", modifySwapLevel);
 document.getElementById("modify-separate-level").addEventListener("click", modifySeparateLevel);
 document.getElementById("generate-text").addEventListener("click", generateBlockText);
+document.getElementById("generate-countdown").addEventListener("click", generateCountdown);
