@@ -46,24 +46,25 @@
     <button class="to-top" id="toTop" aria-label="Scroll to top">
         <div></div>
     </button>
-    <button class="to-discord" aria-label="Join Discord Server">
-        <a href="https://discord.gg/cUMh8bSGWW"></a>
-    </button>
+    <a href="https://discord.gg/cUMh8bSGWW" class="to-discord" aria-label="Join Discord Server">
+        <div></div>
+    </a>
     <div id="background"></div>
     <nav>
-        <a href="#grid">Grid</a>
         <a href="#pixel">Pixel Art</a>
-        <a href="#gravity">Gravity</a>
-        <a href="#scale">Scale</a>
+        <a href="#text">Block Text</a>
         <a href="#mirror">Mirror</a>
-        <a href="#speed">Speed</a>
-        <a href="#random">Random</a>
+        <a href="#random">Randomize</a>
+        <a href="#scale">Scale</a>
+        <a href="#gravity">Gravity</a>
         <a href="#gravityApply">Gravity apply</a>
         <a href="#swap">Swap</a>
         <a href="#separate">Separate</a>
-        <a href="#text">Text</a>
+        <a href="#speed">Speed</a>
+        <a href="#grid">Grid</a>
         <a href="#details">Details</a>
         <a href="#help">Help</a>
+        <a href="https://discord.gg/cUMh8bSGWW" target="_blank">Discord</a>
     </nav>
     <header>
         <div>
@@ -74,22 +75,6 @@
             A bunch of silly little scripts to generate levels for <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>. Please don't rely on these tools being consistent or accurate as they may lose or break details of their outputs.
         </p>
     </header>
-    <section>
-        <div class="tool" id="grid">
-            <h2>Grid</h2>
-            <p>
-                Create a grid with a specified number of rows and columns.
-            </p>
-            <label for="grid-size-x">Rows:</label>
-            <input type="range" name="grid-size-x" id="grid-size-x" min="1" max="100" value="10">
-            <label for="grid-size-y">Columns:</label>
-            <input type="range" name="grid-size-y" id="grid-size-y" min="1" max="100" value="10">
-            <label for="grid-size-gap">Gap:</label>
-            <input type="range" name="grid-size-gap" id="grid-size-gap" min="1" max="100" value="1">
-            <button id="generate-grid">Generate Grid</button>
-        </div>
-        <img src="examples/grid.png">
-    </section>
     <section>
         <div class="tool" id="pixel">
             <h2>Pixel Art</h2>
@@ -128,32 +113,20 @@
         <img src="examples/pixel_art2.png">
     </section>
     <section>
-        <div class="tool" id="gravity">
-            <h2>Impossible Gravity</h2>
+        <div class="tool" id="text">
+            <h2>Block Text</h2>
             <p>
-                Generate a Gravity Field with strength over 5.
+                Turn text into block text or customize the font yourself.
             </p>
-            <label for="impossible-gravity-strength">Strength:</label>
-            <input type="range" name="impossible-gravity-strength" id="impossible-gravity-strength" min="1" max="1000" value="10">
-            <button id="generate-impossible-gravity">Generate Gravity Field</button>
-        </div>
-        <img src="examples/impossible_gravity.png">
-    </section>
-    <section>
-        <div class="tool" id="scale">
-            <h2>Scale Level</h2>
-            <p>
-                Scale up an entire level.
-            </p>
-            <label for="scale-level-scale">Scale:</label>
-            <input type="range" name="scale-level-scale" id="scale-level-scale" min="2" max="100" value="2">
+            <a id="text-download-font" href="data/Font.json" download>Download font template</a>
             <div class="file">
-                <label for="scale-level-level">JSON Level File:</label>
-                <input type="file" name="scale-level-level" id="scale-level-level">
+                <label for="text-font-file">Custom Font File:</label>
+                <input type="file" name="text-font-file" id="text-font-file">
             </div>
-            <button id="modify-scale-level">Scale Level</button>
+            <textarea id="text-font-text" name="text-font-text" placeholder="Enter text"></textarea>
+            <button id="generate-text">Create Text</button>
         </div>
-        <img src="examples/scale_level.png">
+        <img src="examples/text.png">
     </section>
     <section>
         <div class="tool" id="mirror">
@@ -180,22 +153,6 @@
         <img src="examples/mirror_level.png">
     </section>
     <section>
-        <div class="tool" id="speed">
-            <h2>Speed Up Animations</h2>
-            <p>
-                Speed up all animations in a level.
-            </p>
-            <label for="speed-level-speed">Speed:</label>
-            <input type="range" name="speed-level-speed" id="speed-level-speed" min="2" max="100" value="2">
-            <div class="file">
-                <label for="speed-level-level">JSON Level File:</label>
-                <input type="file" name="speed-level-level" id="speed-level-level">
-            </div>
-            <button id="modify-speed-level">Speed Up</button>
-        </div>
-        <img src="examples/speed_level.png">
-    </section>
-    <section>
         <div class="tool" id="random">
             <h2>Randomize Objects</h2>
             <p>
@@ -208,6 +165,34 @@
             <button id="modify-random-level">Randomize</button>
         </div>
         <img src="examples/random_level.png">
+    </section>
+    <section>
+        <div class="tool" id="scale">
+            <h2>Scale Level</h2>
+            <p>
+                Scale up an entire level.
+            </p>
+            <label for="scale-level-scale">Scale:</label>
+            <input type="range" name="scale-level-scale" id="scale-level-scale" min="2" max="100" value="2">
+            <div class="file">
+                <label for="scale-level-level">JSON Level File:</label>
+                <input type="file" name="scale-level-level" id="scale-level-level">
+            </div>
+            <button id="modify-scale-level">Scale Level</button>
+        </div>
+        <img src="examples/scale_level.png">
+    </section>
+    <section>
+        <div class="tool" id="gravity">
+            <h2>Impossible Gravity</h2>
+            <p>
+                Generate a Gravity Field with strength over 5.
+            </p>
+            <label for="impossible-gravity-strength">Strength:</label>
+            <input type="range" name="impossible-gravity-strength" id="impossible-gravity-strength" min="1" max="1000" value="10">
+            <button id="generate-impossible-gravity">Generate Gravity Field</button>
+        </div>
+        <img src="examples/impossible_gravity.png">
     </section>
     <section>
         <div class="tool" id="gravityApply">
@@ -266,20 +251,36 @@
         <img src="examples/separate_level.png">
     </section>
     <section>
-        <div class="tool" id="text">
-            <h2>Block Text</h2>
+        <div class="tool" id="speed">
+            <h2>Speed Up Animations</h2>
             <p>
-                Turn text into block text or customize the font yourself.
+                Speed up all animations in a level.
             </p>
-            <a id="text-download-font" href="data/Font.json" download>Download font template</a>
+            <label for="speed-level-speed">Speed:</label>
+            <input type="range" name="speed-level-speed" id="speed-level-speed" min="2" max="100" value="2">
             <div class="file">
-                <label for="text-font-file">Custom Font File:</label>
-                <input type="file" name="text-font-file" id="text-font-file">
+                <label for="speed-level-level">JSON Level File:</label>
+                <input type="file" name="speed-level-level" id="speed-level-level">
             </div>
-            <textarea id="text-font-text" name="text-font-text" placeholder="Enter text"></textarea>
-            <button id="generate-text">Create Text</button>
+            <button id="modify-speed-level">Speed Up</button>
         </div>
-        <img src="examples/text.png">
+        <img src="examples/speed_level.png">
+    </section>
+    <section>
+        <div class="tool" id="grid">
+            <h2>Grid</h2>
+            <p>
+                Create a grid with a specified number of rows and columns.
+            </p>
+            <label for="grid-size-x">Rows:</label>
+            <input type="range" name="grid-size-x" id="grid-size-x" min="1" max="100" value="10">
+            <label for="grid-size-y">Columns:</label>
+            <input type="range" name="grid-size-y" id="grid-size-y" min="1" max="100" value="10">
+            <label for="grid-size-gap">Gap:</label>
+            <input type="range" name="grid-size-gap" id="grid-size-gap" min="1" max="100" value="1">
+            <button id="generate-grid">Generate Grid</button>
+        </div>
+        <img src="examples/grid.png">
     </section>
     <section>
         <div class="tool" id="details">
@@ -332,7 +333,7 @@
     </section>
     <footer>
         <p>
-            Created by <a href="https://github.com/twhlynch" target="_blank">.index</a> • <a href="https://github.com/twhlynch/goober-dash-level-modding">src</a>
+            Created by <a href="https://github.com/twhlynch" target="_blank">.index</a> • <a href="https://github.com/twhlynch/goober-dash-level-modding" target="_blank">src</a> • <a href="https://discord.gg/cUMh8bSGWW" target="_blank">discord</a>
             <br>
             Not affiliated with <a href="http://winterpixel.io" target="_blank">Winterpixel</a> or <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>.
         </p>
