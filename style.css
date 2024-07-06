@@ -362,7 +362,7 @@ a:hover {
     opacity: .6;
     transition: color .3s ease-in-out;
 }
-.to-discord:hover div {
+.to-discord:hover a {
     opacity: 1;
     color: var(--color-background);
 }
