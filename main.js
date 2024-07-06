@@ -490,7 +490,12 @@ function modifyMirrorLevel() {
             if (node.animation?.tween_sequences?.rotation_degrees) {
                 node.animation.tween_sequences.rotation_degrees.tweens.forEach(tween => {
                     if (tween.value_type === 3) { // 3 is rotate
-                        tween.value = -tween.value;
+                        if (vertical) {
+                            tween.value += 90;
+                        }
+                        if (horizontal) {
+                            tween.value = -tween.value;
+                        }
                     }
                 });
             }
@@ -505,8 +510,17 @@ function modifyMirrorLevel() {
                 node.rotation = -node.rotation;
                 node.pivot_x = 1 - node.pivot_x;
             }
-            if (node.type.includes("ramp")) {
-                node.shape_rotation = 3 - node.shape_rotation; // 0, 1, 2, 3
+            for (let _ in [vertical, horizontal].filter(e=>{return e == true})) {
+                if (node.type.includes("ramp")) {
+                    node.shape_rotation = 3 - node.shape_rotation; // 0, 1, 2, 3
+                } else if (node.type == "laser") { // swap 0, and 2
+                    node.shape_rotation = node.shape_rotation == 0 ? 2 : node.shape_rotation == 2 ? 0 : node.shape_rotation;
+                } else if ([
+                    'arrow', 'alert', 'pit', 'gravity_field', 
+                    'checkpoint', 'finish_line', 'floor'
+                ].includes(node.type)) { // swap 1, and 3
+                    node.shape_rotation = node.shape_rotation == 1 ? 3 : node.shape_rotation == 3 ? 1 : node.shape_rotation;
+                }
             }
         });
 
