@@ -338,7 +338,7 @@ a:hover {
     border: none;
     position: fixed;
     bottom: .75em;
-    right: 1.75em;
+    left: 1.75em;
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 100%;
