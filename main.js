@@ -917,6 +917,73 @@ function generateCountdown() {
     level.save();
 }
 
+function generateSignCountdown() {
+    const start = parseInt(document.getElementById("sign-countdown-start").value);
+    const speed = parseInt(document.getElementById("sign-countdown-speed").value);
+
+    const interval = 1 / speed;
+
+    const level = new Level();
+
+    for (let i = start; i >= 0; i--) {
+        const node = new Node();
+        node.type = "sign";
+        node.properties.message = i.toString();
+        node.animation = {
+            "offset": 0,
+            "repeat": false,
+            "tween_sequences": {
+                "position": {
+                    "property": "position",
+                    "total_duration": start / speed + 2,
+                    "tweens": [
+                        {
+                            "duration": 0,
+                            "ease_type": 0,
+                            "transition": 0,
+                            "value_type": 5,
+                            "value_x": 0,
+                            "value_y": 10000
+                        },
+                        {
+                            "duration": interval * (start - i),
+                            "ease_type": 0,
+                            "transition": 0,
+                            "value_type": 0
+                        },
+                        {
+                            "duration": 0,
+                            "ease_type": 0,
+                            "transition": 0,
+                            "value_type": 5,
+                            "value_x": 0,
+                            "value_y": 0
+                        },
+                        {
+                            "duration": interval,
+                            "ease_type": 0,
+                            "transition": 0,
+                            "value_type": 0
+                        },
+                        {
+                            "duration": 0,
+                            "ease_type": 0,
+                            "transition": 0,
+                            "value_type": 5,
+                            "value_x": 0,
+                            "value_y": 10000
+                        }
+                    ]
+                }
+            }
+        }
+        level.add(node);
+    }
+
+    level.metadata.name = "Sign Countdown";
+    level.save();
+}
+
 function getLevelDetails() {
     const file = document.getElementById("details-level").files[0];
     const output = document.getElementById("details-output");
@@ -982,3 +1049,4 @@ document.getElementById("modify-swap-level").addEventListener("click", modifySwa
 document.getElementById("modify-separate-level").addEventListener("click", modifySeparateLevel);
 document.getElementById("generate-text").addEventListener("click", generateBlockText);
 document.getElementById("generate-countdown").addEventListener("click", generateCountdown);
+document.getElementById("generate-sign-countdown").addEventListener("click", generateSignCountdown);
