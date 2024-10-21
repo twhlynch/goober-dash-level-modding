@@ -595,35 +595,40 @@ function generateVideo() {
                                         nodeTime += nodePrevFrames[f].duration;
                                     }
 
-                                    node.animation.tween_sequences.position.tweens.push({
-                                        "duration": isNodesFirst ? (i / 24) : (i / 24 - nodeTime),
-                                        "ease_type": 0,
-                                        "transition": 0,
-                                        "value_type": 0
-                                    });
-                                    node.animation.tween_sequences.position.tweens.push({
-                                        "duration": 0,
-                                        "ease_type": 0,
-                                        "transition": 0,
-                                        "value_type": 5,
-                                        "value_x": 0,
-                                        "value_y": 0
-                                    });
-                                    node.animation.tween_sequences.position.tweens.push({
-                                        "duration": 1 / 24,
-                                        "ease_type": 0,
-                                        "transition": 0,
-                                        "value_type": 0
-                                    });
-                                    node.animation.tween_sequences.position.tweens.push({
-                                        "duration": 0,
-                                        "ease_type": 0,
-                                        "transition": 0,
-                                        "value_type": 5,
-                                        "value_x": 0,
-                                        "value_y": 10000
-                                    });
-                                    // TODO: optimise for unchanged frames
+                                    if (lastTypes[x][y] == bestMatch) {
+                                        let len = node.animation.tween_sequences.position.tweens.length;
+                                        node.animation.tween_sequences.position.tweens[len - 2].duration += 1 / 24;
+                                    } else {
+                                        node.animation.tween_sequences.position.tweens.push({
+                                            "duration": isNodesFirst ? (i / 24) : (i / 24 - nodeTime),
+                                            "ease_type": 0,
+                                            "transition": 0,
+                                            "value_type": 0
+                                        });
+                                        node.animation.tween_sequences.position.tweens.push({
+                                            "duration": 0,
+                                            "ease_type": 0,
+                                            "transition": 0,
+                                            "value_type": 5,
+                                            "value_x": 0,
+                                            "value_y": 0
+                                        });
+                                        node.animation.tween_sequences.position.tweens.push({
+                                            "duration": 1 / 24,
+                                            "ease_type": 0,
+                                            "transition": 0,
+                                            "value_type": 0
+                                        });
+                                        node.animation.tween_sequences.position.tweens.push({
+                                            "duration": 0,
+                                            "ease_type": 0,
+                                            "transition": 0,
+                                            "value_type": 5,
+                                            "value_x": 0,
+                                            "value_y": 10000
+                                        });
+                                    }
+                                    lastTypes[x][y] = bestMatch;
                                 }
                             }
                         }
