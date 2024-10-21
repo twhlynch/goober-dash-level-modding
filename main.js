@@ -190,11 +190,20 @@ function init() {
         advancedOptions.style.display = advancedCheckbox.checked? "grid" : "none";
     });
 
+    // advanced circle options
+    const circleAdvancedOptions = document.getElementById("circle-advanced-options");
+
     for (let type of nodeTypes) {
         advancedOptions.innerHTML += `
         <div class="checkbox">
             <input type="checkbox" name="pixel-art-advanced-${type}" id="pixel-art-advanced-${type}">
             <label for="pixel-art-advanced-${type}">${type.replaceAll("_", " ")}</label>
+        </div>
+        `;
+        circleAdvancedOptions.innerHTML += `
+        <div class="checkbox">
+            <input type="checkbox" name="circle-advanced-${type}" id="circle-advanced-${type}">
+            <label for="circle-advanced-${type}">${type.replaceAll("_", " ")}</label>
         </div>
         `;
     }
@@ -263,6 +272,41 @@ function generateGrid() {
     }
 
     level.metadata.name = "Grid";
+    level.save();
+}
+
+function generateCircle() {
+    const angle = parseInt(document.getElementById("circle-angle").value);
+    const radius = parseInt(document.getElementById("circle-radius").value);
+    const fullSpin = document.getElementById("circle-full-spin").checked;
+
+    const selectedAdvancedOptions = [];
+    nodeTypes.forEach(type => {
+        const typeOption = document.getElementById("circle-advanced-" + type);
+
+        if (typeOption && typeOption.checked) {
+            selectedAdvancedOptions.push(type);
+        }
+    });
+
+    const level = new Level();
+
+    for (let i = 0; i < selectedAdvancedOptions.length; i++) {
+        const option = selectedAdvancedOptions[i];
+        const position = 2 * radius * i * 1.5;
+
+        for (let j = 0; j <= (fullSpin ? 360 : 180); j += angle) {
+            const node = new Node();
+            node.type = option;
+            node.x = position;
+            node.y = 0;
+            node.width = radius * 2;
+            node.rotation = j;
+            level.add(node);
+        }
+    }
+
+    level.metadata.name = "Circle";
     level.save();
 }
 
@@ -1265,3 +1309,4 @@ document.getElementById("generate-text").addEventListener("click", generateBlock
 document.getElementById("generate-countdown").addEventListener("click", generateCountdown);
 document.getElementById("generate-sign-countdown").addEventListener("click", generateSignCountdown);
 document.getElementById("generate-video").addEventListener("click", generateVideo);
+document.getElementById("generate-circle").addEventListener("click", generateCircle);

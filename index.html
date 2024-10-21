@@ -56,6 +56,7 @@
         <a href="#text">Block Text</a>
         <a href="#mirror">Mirror</a>
         <a href="#countdown">Countdown</a>
+        <a href="#circle">Circle</a>
         <a href="#random">Randomize</a>
         <a href="#scale">Scale</a>
         <a href="#gravity">Gravity</a>
@@ -195,6 +196,27 @@
             <button id="generate-countdown">Generate Countdown</button>
         </div>
         <img src="examples/countdown.png">
+    </section>
+    <section>
+        <div class="tool" id="circle">
+            <h2>Circle</h2>
+            <p>
+                Create a perfect circle.
+            </p>
+            <label for="circle-angle">Turn Angle:</label>
+            <input type="range" name="circle-angle" id="circle-angle" min="1" max="10" value="2">
+            <label for="circle-radius">Circle Radius:</label>
+            <input type="range" name="circle-radius" id="circle-radius" min="1" max="100" value="10">
+            <div class="checkbox">
+                <div class="checkbox">
+                    <input type="checkbox" name="circle-full-spin" id="circle-full-spin">
+                    <label for="circle-full-spin">Full spin</label>
+                </div>
+            </div>
+            <div class="checkbox" id="circle-advanced-options"></div>
+            <button id="generate-circle">Generate Circle</button>
+        </div>
+        <img src="examples/circle.png">
     </section>
     <section>
         <div class="tool" id="sign-countdown">

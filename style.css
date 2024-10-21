@@ -457,9 +457,8 @@ a:hover {
     }
 }
 
-#pixel-art-advanced-options {
-    display: none;
-
+#circle-advanced-options, #pixel-art-advanced-options {
+    display: grid;
     grid-template-columns: auto auto auto;
     gap: 0.4em;
     margin-inline: auto;
@@ -475,6 +474,9 @@ a:hover {
         align-items: center;
         justify-content: space-between;
     }
+}
+#pixel-art-advanced-options {
+    display: none;
 }
 
 #block-defs {
