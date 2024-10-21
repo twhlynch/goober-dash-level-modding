@@ -822,8 +822,13 @@ function modifyScaleLevel() {
 }
 
 function modifySpeedLevel() {
-    const speed = parseInt(document.getElementById("speed-level-speed").value);
+    let speed = parseInt(document.getElementById("speed-level-speed").value);
+    const isSlow = document.getElementById("speed-level-slow").checked;
     const file = document.getElementById("speed-level-level").files[0];
+
+    if (isSlow) {
+        speed = 1 / speed;
+    }
 
     const reader = new FileReader();
     reader.onload = function() {
@@ -846,7 +851,7 @@ function modifySpeedLevel() {
             }
         });
 
-        level.metadata.name += " Sped Up";
+        level.metadata.name += isSlow ? " Slowed down" : " Sped Up";
         level.save();
     }
     reader.readAsText(file);
