@@ -446,6 +446,196 @@ function generatePixelArt() {
     reader.readAsDataURL(file);
 }
 
+function generateVideo() {
+    const xSize = parseInt(document.getElementById("video-size-x").value);
+    const ySize = parseInt(document.getElementById("video-size-y").value);
+    const file = document.getElementById("video-video").files[0];
+
+    const noPixel = [
+        "physics_block", // lag
+        "start" // min 3x3
+    ];
+
+    const reader = new FileReader();
+    reader.onload = async function() {
+        let buffer = reader.result;
+        let videoBlob = new Blob([new Uint8Array(buffer)], { type: 'video/mp4' });
+        let url = window.URL.createObjectURL(videoBlob);
+
+        const video = document.createElement("video");
+        video.src = url;
+
+        await video.play();
+        const [track] = video.captureStream().getVideoTracks();
+        video.onended = () => track.stop();
+        
+        const processor = new MediaStreamTrackProcessor(track);
+        const videoReader = processor.readable.getReader();
+
+        let frames = [];
+        
+        readChunk();
+        function readChunk() {
+            videoReader.read().then(async({ done, value }) => {
+                if (value) {
+                    const bitmap = await createImageBitmap(value);
+                    frames.push(bitmap);
+                    value.close();
+                }
+                if (!done) {
+                    readChunk();
+                } else {
+                    let nodeTypeMasks = {};
+                    nodeTypes.filter(t => !noPixel.includes(t)).forEach(type => {
+                        nodeTypeMasks[type] = [];
+                        for (let x = 0; x < xSize; x++) {
+                            nodeTypeMasks[type].push([]);
+                            for (let y = 0; y < ySize; y++) {
+                                let node = new Node();
+                                node.type = type;
+                                node.x = x;
+                                node.y = y;
+                                node.animation = {
+                                    "offset": 0,
+                                    "repeat": true,
+                                    "tween_sequences": {
+                                        "position": {
+                                            "property": "position",
+                                            "total_duration": frames.length / 24,
+                                            "tweens": []
+                                        }
+                                    }
+                                }
+                                node.animation.tween_sequences.position.tweens.push({
+                                    "duration": 0,
+                                    "ease_type": 0,
+                                    "transition": 0,
+                                    "value_type": 5,
+                                    "value_x": 0,
+                                    "value_y": 10000
+                                });
+                                nodeTypeMasks[type][x].push(node);
+                            }
+                        }
+                    });
+
+                    const lastTypes = [];
+                    for (let x = 0; x < xSize; x++) {
+                        lastTypes.push([]);
+                        for (let y = 0; y < ySize; y++) {
+                            lastTypes[x][y] = "";
+                        }
+                    }
+
+                    const canvas = document.createElement("canvas");
+                    canvas.width = xSize;
+                    canvas.height = ySize;
+                    const ctx = canvas.getContext("2d");
+
+                    for (let i in frames) {
+                        const frame = frames[i];
+                        ctx.drawImage(frame, 0, 0, xSize, ySize);
+                        const imageData = ctx.getImageData(0, 0, xSize, ySize);
+
+                        for (let y = 0; y < ySize; y++) {
+                            for (let x = 0; x < xSize; x++) {
+                                const index = (x + y * xSize) * 4;
+                                const r = imageData.data[index];
+                                const g = imageData.data[index + 1];
+                                const b = imageData.data[index + 2];
+                                const a = imageData.data[index + 3];
+            
+                                if (a === 0) {
+                                    continue;
+                                }
+            
+                                let bestMatch = undefined;
+                                let bestMatchDistance = Infinity;
+            
+                                for (let type in nodeTypeColors) {
+                                    if (noPixel.includes(type)) {
+                                        continue;
+                                    }
+            
+                                    const color = nodeTypeColors[type];
+                                    const distance = Math.sqrt(
+                                        Math.pow(color.r - r, 2) +
+                                        Math.pow(color.g - g, 2) +
+                                        Math.pow(color.b - b, 2)
+                                    );
+                                    
+                                    if (distance < bestMatchDistance) {
+                                        bestMatch = type;
+                                        bestMatchDistance = distance;
+                                    }
+                                }
+            
+                                if (bestMatch) {
+                                    const node = nodeTypeMasks[bestMatch][x][y];
+
+                                    let isNodesFirst = node.animation.tween_sequences.position.tweens.length == 1;
+                                    let nodePrevFrames = node.animation.tween_sequences.position.tweens.filter((f, fi)=>fi != node.animation.tween_sequences.position.tweens.length - 1);
+                                    let nodeTime = 0;
+                                    for (let f = 0; f < nodePrevFrames.length; f++) {
+                                        nodeTime += nodePrevFrames[f].duration;
+                                    }
+
+                                    node.animation.tween_sequences.position.tweens.push({
+                                        "duration": isNodesFirst ? (i / 24) : (i / 24 - nodeTime),
+                                        "ease_type": 0,
+                                        "transition": 0,
+                                        "value_type": 0
+                                    });
+                                    node.animation.tween_sequences.position.tweens.push({
+                                        "duration": 0,
+                                        "ease_type": 0,
+                                        "transition": 0,
+                                        "value_type": 5,
+                                        "value_x": 0,
+                                        "value_y": 0
+                                    });
+                                    node.animation.tween_sequences.position.tweens.push({
+                                        "duration": 1 / 24,
+                                        "ease_type": 0,
+                                        "transition": 0,
+                                        "value_type": 0
+                                    });
+                                    node.animation.tween_sequences.position.tweens.push({
+                                        "duration": 0,
+                                        "ease_type": 0,
+                                        "transition": 0,
+                                        "value_type": 5,
+                                        "value_x": 0,
+                                        "value_y": 10000
+                                    });
+                                    // TODO: optimise for unchanged frames
+                                }
+                            }
+                        }
+                    }
+
+                    const level = new Level();
+
+                    for (let type in nodeTypeMasks) {
+                        for (let x = 0; x < xSize; x++) {
+                            for (let y = 0; y < ySize; y++) {
+                                const node = nodeTypeMasks[type][x][y];
+                                if (node.animation.tween_sequences.position.tweens.length > 1) {
+                                    level.add(node);
+                                }
+                            }
+                        }
+                    }
+                    
+                    level.metadata.name = "Video";
+                    level.save();
+                }
+            });
+        }
+    }
+    reader.readAsArrayBuffer(file);
+}
+
 function generateImpossibleGravity() {
     const strength = parseInt(document.getElementById("impossible-gravity-strength").value);
 
@@ -1050,3 +1240,4 @@ document.getElementById("modify-separate-level").addEventListener("click", modif
 document.getElementById("generate-text").addEventListener("click", generateBlockText);
 document.getElementById("generate-countdown").addEventListener("click", generateCountdown);
 document.getElementById("generate-sign-countdown").addEventListener("click", generateSignCountdown);
+document.getElementById("generate-video").addEventListener("click", generateVideo);

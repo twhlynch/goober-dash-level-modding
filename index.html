@@ -52,6 +52,7 @@
     <div id="background"></div>
     <nav>
         <a href="#pixel">Pixel Art</a>
+        <a href="#video">Video</a>
         <a href="#text">Block Text</a>
         <a href="#mirror">Mirror</a>
         <a href="#countdown">Countdown</a>
@@ -112,6 +113,28 @@
             <button id="generate-pixel-art">Generate Pixel Art</button>
         </div>
         <img src="examples/pixel_art2.png">
+    </section>
+    <section>
+        <div class="tool" id="video">
+            <h2>Video</h2>
+            <p>
+                Upload a <strong>.mp4</strong> video to convert it into pixel art.
+                <br>
+                <strong>Note:</strong> This tool will likely lag with videos over 20x20 or 15 seconds long
+                <br>
+                <strong>Note:</strong> This tool may not be supported by your browser. If it doesn't work, try an up to date Chromium browser.
+            </p>
+            <label for="video-size-x">Width:</label>
+            <input type="range" name="video-size-x" id="video-size-x" min="10" max="40" value="10">
+            <label for="video-size-y">Height:</label>
+            <input type="range" name="video-size-y" id="video-size-y" min="10" max="40" value="10">
+            <div class="file">
+                <label for="video-video">Video:</label>
+                <input type="file" name="video-video" id="video-video">
+            </div>
+            <button id="generate-video">Generate Video</button>
+        </div>
+        <img src="examples/video.png">
     </section>
     <section>
         <div class="tool" id="text">
