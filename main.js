@@ -451,10 +451,21 @@ function generateVideo() {
     const ySize = parseInt(document.getElementById("video-size-y").value);
     const file = document.getElementById("video-video").files[0];
 
+    const isBinary = document.getElementById("video-binary").checked;
+
     const noPixel = [
         "physics_block", // lag
         "start" // min 3x3
     ];
+
+    const binary = [
+        "block",
+        "background"
+    ];
+
+    if (isBinary) {
+        noPixel.push(...nodeTypes.filter(t => !binary.includes(t) && !noPixel.includes(t)));
+    }
 
     const reader = new FileReader();
     reader.onload = async function() {
@@ -464,6 +475,7 @@ function generateVideo() {
 
         const video = document.createElement("video");
         video.src = url;
+        video.muted = true;
 
         await video.play();
         const [track] = video.captureStream().getVideoTracks();
@@ -472,6 +484,7 @@ function generateVideo() {
         const processor = new MediaStreamTrackProcessor(track);
         const videoReader = processor.readable.getReader();
 
+        const generateButton = document.getElementById("generate-video");
         let frames = [];
         
         readChunk();
@@ -480,6 +493,7 @@ function generateVideo() {
                 if (value) {
                     const bitmap = await createImageBitmap(value);
                     frames.push(bitmap);
+                    generateButton.innerText = `Reading Video: ${Math.round(video.currentTime / video.duration * 100)}%`;
                     value.close();
                 }
                 if (!done) {
@@ -533,6 +547,7 @@ function generateVideo() {
                     const ctx = canvas.getContext("2d");
 
                     for (let i in frames) {
+                        generateButton.innerText = `Generating Nodes: ${Math.round(i / frames.length * 100)}%`;
                         const frame = frames[i];
                         ctx.drawImage(frame, 0, 0, xSize, ySize);
                         const imageData = ctx.getImageData(0, 0, xSize, ySize);
@@ -621,6 +636,7 @@ function generateVideo() {
                             for (let y = 0; y < ySize; y++) {
                                 const node = nodeTypeMasks[type][x][y];
                                 if (node.animation.tween_sequences.position.tweens.length > 1) {
+                                    generateButton.innerText = `Building Level: ${Math.round((y + x * ySize) / (xSize * ySize) * 100)}%`;
                                     level.add(node);
                                 }
                             }
@@ -628,7 +644,10 @@ function generateVideo() {
                     }
                     
                     level.metadata.name = "Video";
+                    generateButton.innerText = "Downloading..";
                     level.save();
+
+                    generateButton.innerText = "Generate Video";
                 }
             });
         }
