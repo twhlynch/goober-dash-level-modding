@@ -278,6 +278,7 @@ function generateGrid() {
 function generateCircle() {
     const angle = parseInt(document.getElementById("circle-angle").value);
     const radius = parseInt(document.getElementById("circle-radius").value);
+    const width = parseInt(document.getElementById("circle-width").value);
     const fullSpin = document.getElementById("circle-full-spin").checked;
 
     const selectedAdvancedOptions = [];
@@ -301,6 +302,7 @@ function generateCircle() {
             node.x = position;
             node.y = 0;
             node.width = radius * 2;
+            node.height = width;
             node.rotation = j;
             level.add(node);
         }
