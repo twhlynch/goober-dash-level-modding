@@ -557,6 +557,7 @@ textarea {
     padding: 0.4rem;
     max-height: 400px;
     overflow-y: scroll;
+    margin-bottom: 2em;
 }
 .leaderboard::-webkit-scrollbar {
     display: none

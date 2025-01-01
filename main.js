@@ -1329,7 +1329,7 @@ async function loadStats() {
     if (statsLoaded) return;
     statsLoaded = true;
 
-    const leaderboards = ["wins", "records"];
+    const leaderboards = ["wins", "records", "winstreak", "winrate", "games", "deaths"];
 
     const promises = [];
     for (const leaderboard of leaderboards) {
@@ -1356,7 +1356,9 @@ async function loadStats() {
             const usernameElement = document.createElement("span");
             usernameElement.textContent = entry.username;
             const valueElement = document.createElement("span");
-            valueElement.textContent = entry[leaderboard];
+            let value = entry[leaderboard];
+            if (leaderboard === "winrate") value = (value * 100).toFixed(1) + "%";
+            valueElement.textContent = value;
 
             rowElement.appendChild(positionElement);
             rowElement.appendChild(usernameElement);
@@ -1365,9 +1367,9 @@ async function loadStats() {
         }
 
         const csvButton = document.getElementById(`${leaderboard}-csv`);
-        csvButton.href = `data:text/csv;charset=utf-8,username,${leaderboard}\n${
+        csvButton.href = `data:text/csv;charset=utf-8,id,username,${leaderboard}\n${
             encodeURIComponent(leaderboardsData[leaderboard].map(
-                entry => `${entry.username.replaceAll('\n', '')},${entry[leaderboard]}`
+                entry => `${entry.id},${entry.username.replaceAll('\n', '')},${entry[leaderboard]}`
             ).join("\n"))
         }`;
         csvButton.download = `${leaderboard}_leaderboard.csv`;
