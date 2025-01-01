@@ -556,7 +556,7 @@ textarea {
 }
 .lb-row {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1rem 1fr auto;
     padding: 0.1rem 0.6rem;
     align-items: center;
     gap: 1rem;
@@ -565,10 +565,18 @@ textarea {
 .lb-row:last-child {
     border-bottom: none;
 }
-.lb-row span {
+.lb-row span:nth-child(1) {
+    font-weight: 600;
+    color: var(--color-highlight)
+}
+.lb-row span:nth-child(2) {
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+.lb-row span:nth-child(3) {
+    font-weight: 600;
+    color: var(--color-primary)
 }
 .hint {
     color: var(--color-secondary);

@@ -1342,15 +1342,19 @@ async function loadStats() {
     for (const leaderboard of leaderboards) {
         const container = document.getElementById(`${leaderboard}-lb`);
         container.innerHTML = "";
-        for (const entry of leaderboardsData[leaderboard]) {
+        for (const i in leaderboardsData[leaderboard]) {
+            const entry = leaderboardsData[leaderboard][i];
             const rowElement = document.createElement("div");
             rowElement.classList.add("lb-row");
 
+            const positionElement = document.createElement("span");
+            positionElement.textContent = parseInt(i) + 1;
             const usernameElement = document.createElement("span");
             usernameElement.textContent = entry.username;
             const valueElement = document.createElement("span");
             valueElement.textContent = entry.wins || entry.records;
 
+            rowElement.appendChild(positionElement);
             rowElement.appendChild(usernameElement);
             rowElement.appendChild(valueElement);
             container.appendChild(rowElement);
