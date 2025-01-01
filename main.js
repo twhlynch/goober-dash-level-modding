@@ -183,6 +183,28 @@ function init() {
         });
     }
 
+    // Tabs
+    const params = new URLSearchParams(window.location.search);
+    let currentTab = params.get("tab") || "tools";
+    const tabs = document.querySelectorAll('#tabs > button');
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            tabs.forEach((tab) => {
+                tab.classList.remove("active");
+                const content = document.getElementById(`${tab.id}-content`);
+                content.style.display = "none";
+            });
+            tab.classList.add("active");
+            const content = document.getElementById(`${tab.id}-content`);
+                content.style.display = "block";
+            currentTab = tab.id;
+            window.history.pushState({}, "", `?tab=${currentTab}`);
+        });
+        if (tab.id === currentTab) {
+            tab.click();
+        }
+    });
+
     // advanced pixel art options
     const advancedOptions = document.getElementById("pixel-art-advanced-options");
     const advancedCheckbox = document.getElementById("pixel-art-advanced");
@@ -1294,6 +1316,46 @@ function getLevelDetails() {
 
     }
     reader.readAsText(file);
+}
+
+//#region Statistics
+const api_url = "https://goober-dash-stats-api.onrender.com";
+
+const statsTab = document.getElementById("stats");
+statsTab.addEventListener("click", loadStats);
+
+async function loadStats() {
+    const leaderboards = ["wins", "records"];
+
+    const promises = [];
+    for (const leaderboard of leaderboards) {
+        promises.push(fetch(`${api_url}/${leaderboard}_leaderboard.json`));
+    }
+    const responses = await Promise.all(promises);
+
+    const leaderboardsData = {};
+    for (const [index, response] of responses.entries()) {
+        const leaderboardData = await response.json();
+        leaderboardsData[leaderboards[index]] = leaderboardData;
+    }
+
+    for (const leaderboard of leaderboards) {
+        const container = document.getElementById(`${leaderboard}-lb`);
+        container.innerHTML = "";
+        for (const entry of leaderboardsData[leaderboard]) {
+            const rowElement = document.createElement("div");
+            rowElement.classList.add("lb-row");
+
+            const usernameElement = document.createElement("span");
+            usernameElement.textContent = entry.username;
+            const valueElement = document.createElement("span");
+            valueElement.textContent = entry.wins || entry.records;
+
+            rowElement.appendChild(usernameElement);
+            rowElement.appendChild(valueElement);
+            container.appendChild(rowElement);
+        }
+    }
 }
 
 //#region runtime events

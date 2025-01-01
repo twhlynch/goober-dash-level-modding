@@ -60,6 +60,18 @@ body {
     }
 }
 
+nav#tabs {
+    display: grid;
+    gap: 2em;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 30% 30%;
+}
+#tabs > .active {
+    background-color: var(--color-highlight);
+    color: var(--color-primary)
+}
+
 section {
     margin: 0 auto;
     width: min(100%, 1000px);
@@ -529,7 +541,41 @@ textarea {
     font-size: 1em;
     line-height: 1.6;
     resize: none;
+}
 
+.leaderboard {
+    border: 2px solid var(--color-highlight);
+    border-radius: 5px;
+    margin-inline: 1rem;
+    padding: 0.4rem;
+    max-height: 400px;
+    overflow-y: scroll;
+}
+.leaderboard::-webkit-scrollbar {
+    display: none
+}
+.lb-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 0.1rem 0.6rem;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-background-alt);
+}
+.lb-row:last-child {
+    border-bottom: none;
+}
+.lb-row span {
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.hint {
+    color: var(--color-secondary);
+    font-weight: 400;
+    font-size: 0.8rem;
+    display: inline-block;
+    text-shadow: none;
 }
 
 @media only screen and (max-width: 768px) {

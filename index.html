@@ -50,375 +50,413 @@
         <div></div>
     </a>
     <div id="background"></div>
-    <nav>
-        <a href="#pixel">Pixel Art</a>
-        <a href="#video">Video</a>
-        <a href="#text">Block Text</a>
-        <a href="#mirror">Mirror</a>
-        <a href="#countdown">Countdown</a>
-        <a href="#circle">Circle</a>
-        <a href="#random">Randomize</a>
-        <a href="#scale">Scale</a>
-        <a href="#gravity">Gravity</a>
-        <a href="#gravityApply">Gravity apply</a>
-        <a href="#swap">Swap</a>
-        <a href="#separate">Separate</a>
-        <a href="#speed">Speed</a>
-        <a href="#grid">Grid</a>
-        <a href="#details">Details</a>
-        <a href="#help">Help</a>
-        <a href="https://discord.gg/cUMh8bSGWW" target="_blank">Discord</a>
+    <nav id="tabs">
+        <button id="tools" class="active">Tools</button>
+        <button id="stats">Stats</button>
     </nav>
-    <header>
-        <div>
-            <h1>Goober Dash Level Modding!</h1>
-            <img src="favicon.png" alt="logo">
-        </div>
-        <p>
-            A bunch of silly little scripts to generate levels for <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>. Please don't rely on these tools being consistent or accurate as they may lose or break details of their outputs.
-        </p>
-    </header>
-    <section>
-        <div class="tool" id="pixel">
-            <h2>Pixel Art</h2>
-            <p>
-                Upload an image to convert it into pixel art.
-            </p>
-            <label for="pixel-art-size-x">Width:</label>
-            <input type="range" name="pixel-art-size-x" id="pixel-art-size-x" min="1" max="100" value="10">
-            <label for="pixel-art-size-y">Height:</label>
-            <input type="range" name="pixel-art-size-y" id="pixel-art-size-y" min="1" max="100" value="10">
-            <div class="checkbox" style="display: none;">
-                <input type="checkbox" name="pixel-art-optimise" id="pixel-art-optimise">
-                <label for="pixel-art-optimise">Optimise:</label>
-            </div>
-            <div class="checkbox">
-                <div class="checkbox">
-                    <input type="checkbox" name="pixel-art-double-layer" id="pixel-art-double-layer">
-                    <label for="pixel-art-double-layer">Double layer</label>
-                </div>
-                <div class="checkbox">
-                    <input type="checkbox" name="pixel-art-background" id="pixel-art-background">
-                    <label for="pixel-art-background">Backgrounds only</label>
-                </div>
-                <div class="checkbox">
-                    <input type="checkbox" name="pixel-art-advanced" id="pixel-art-advanced">
-                    <label for="pixel-art-advanced">Advanced</label>
-                </div>
-            </div>
-            <div class="checkbox" id="pixel-art-advanced-options"></div>
-            <div class="file">
-                <label for="pixel-art-image">Image:</label>
-                <input type="file" name="pixel-art-image" id="pixel-art-image">
-            </div>
-            <button id="generate-pixel-art">Generate Pixel Art</button>
-        </div>
-        <img src="examples/pixel_art2.png">
-    </section>
-    <section>
-        <div class="tool" id="video">
-            <h2>Video</h2>
-            <p>
-                Upload a <strong>.mp4</strong> video to convert it into pixel art.
-                <br>
-                <strong>Note:</strong> This tool will likely lag with videos over 30x30 or 15 seconds long
-                <br>
-                <strong>Note:</strong> This tool may not be supported by your browser. If it doesn't work, try an up to date Chromium browser.
-            </p>
-            <label for="video-size-x">Width:</label>
-            <input type="range" name="video-size-x" id="video-size-x" min="10" max="40" value="10">
-            <label for="video-size-y">Height:</label>
-            <input type="range" name="video-size-y" id="video-size-y" min="10" max="40" value="10">
-            <div class="checkbox">
-                <div class="checkbox">
-                    <input type="checkbox" name="video-binary" id="video-binary">
-                    <label for="video-binary">Binary</label>
-                </div>
-            </div>
-            <div class="file">
-                <label for="video-video">Video:</label>
-                <input type="file" name="video-video" id="video-video">
-            </div>
-            <button id="generate-video">Generate Video</button>
-        </div>
-        <img src="examples/video.png">
-    </section>
-    <section>
-        <div class="tool" id="text">
-            <h2>Block Text</h2>
-            <p>
-                Turn text into block text or customize the font yourself.
-            </p>
-            <a id="text-download-font" href="data/Font.json" download>Download font template</a>
-            <div class="file">
-                <label for="text-font-file">Custom Font File:</label>
-                <input type="file" name="text-font-file" id="text-font-file">
-            </div>
-            <textarea id="text-font-text" name="text-font-text" placeholder="Enter text"></textarea>
-            <button id="generate-text">Create Text</button>
-        </div>
-        <img src="examples/text.png">
-    </section>
-    <section>
-        <div class="tool" id="mirror">
-            <h2>Mirror Level</h2>
-            <p>
-                Mirror a level horizontally and/or vertically.
-            </p>
-            <div class="checkbox">
-                <div class="checkbox">
-                    <input type="checkbox" name="mirror-level-vertical" id="mirror-level-vertical">
-                    <label for="mirror-level-vertical">Vertical</label>
-                </div>
-                <div class="checkbox">
-                    <input type="checkbox" name="mirror-level-horizontal" id="mirror-level-horizontal">
-                    <label for="mirror-level-horizontal">Horizontal</label>
-                </div>
-            </div>
-            <div class="file">
-                <label for="mirror-level-level">JSON Level File:</label>
-                <input type="file" name="mirror-level-level" id="mirror-level-level">
-            </div>
-            <button id="modify-mirror-level">Mirror Level</button>
-        </div>
-        <img src="examples/mirror_level.png">
-    </section>
-    <section>
-        <div class="tool" id="countdown">
-            <h2>Countdown</h2>
-            <p>
-                Create a countdown from a number to 0.
-            </p>
-            <label for="countdown-start">Start Time:</label>
-            <input type="range" name="countdown-start" id="countdown-start" min="1" max="100" value="1">
-            <label for="countdown-speed">Speed:</label>
-            <input type="range" name="countdown-speed" id="countdown-speed" min="1" max="10" value="1">
-            <button id="generate-countdown">Generate Countdown</button>
-        </div>
-        <img src="examples/countdown.png">
-    </section>
-    <section>
-        <div class="tool" id="circle">
-            <h2>Circle</h2>
-            <p>
-                Create a perfect circle.
-            </p>
-            <label for="circle-angle">Turn Angle:</label>
-            <input type="range" name="circle-angle" id="circle-angle" min="1" max="90" value="4">
-            <label for="circle-radius">Circle Radius:</label>
-            <input type="range" name="circle-radius" id="circle-radius" min="1" max="100" value="10">
-            <label for="circle-width">Segment Width:</label>
-            <input type="range" name="circle-width" id="circle-width" min="1" max="50" value="1">
-            <div class="checkbox">
-                <div class="checkbox">
-                    <input type="checkbox" name="circle-full-spin" id="circle-full-spin">
-                    <label for="circle-full-spin">Full spin</label>
-                </div>
-            </div>
-            <div class="checkbox" id="circle-advanced-options"></div>
-            <button id="generate-circle">Generate Circle</button>
-        </div>
-        <img src="examples/circle.png">
-    </section>
-    <section>
-        <div class="tool" id="sign-countdown">
-            <h2>Sign Countdown</h2>
-            <p>
-                Create a countdown from a number to 0 (using signs).
-            </p>
-            <label for="sign-countdown-start">Start Time:</label>
-            <input type="range" name="sign-countdown-start" id="sign-countdown-start" min="1" max="100" value="1">
-            <label for="sign-countdown-speed">Speed:</label>
-            <input type="range" name="sign-countdown-speed" id="sign-countdown-speed" min="1" max="10" value="1">
-            <button id="generate-sign-countdown">Generate Countdown</button>
-        </div>
-        <img src="examples/sign_countdown.png">
-    </section>
-    <section>
-        <div class="tool" id="random">
-            <h2>Randomize Objects</h2>
-            <p>
-                Randomly swap out all the object types in a level.
-            </p>
-            <div class="file">
-                <label for="random-level-level">JSON Level File:</label>
-                <input type="file" name="random-level-level" id="random-level-level">
-            </div>
-            <button id="modify-random-level">Randomize</button>
-        </div>
-        <img src="examples/random_level.png">
-    </section>
-    <section>
-        <div class="tool" id="scale">
-            <h2>Scale Level</h2>
-            <p>
-                Scale up an entire level.
-            </p>
-            <label for="scale-level-scale">Scale:</label>
-            <input type="range" name="scale-level-scale" id="scale-level-scale" min="2" max="100" value="2">
-            <div class="file">
-                <label for="scale-level-level">JSON Level File:</label>
-                <input type="file" name="scale-level-level" id="scale-level-level">
-            </div>
-            <button id="modify-scale-level">Scale Level</button>
-        </div>
-        <img src="examples/scale_level.png">
-    </section>
-    <section>
-        <div class="tool" id="gravity">
-            <h2>Impossible Gravity</h2>
-            <p>
-                Generate a Gravity Field with strength over 5.
-            </p>
-            <label for="impossible-gravity-strength">Strength:</label>
-            <input type="range" name="impossible-gravity-strength" id="impossible-gravity-strength" min="1" max="1000" value="10">
-            <button id="generate-impossible-gravity">Generate Gravity Field</button>
-        </div>
-        <img src="examples/impossible_gravity.png">
-    </section>
-    <section>
-        <div class="tool" id="gravityApply">
-            <h2>Apply Gravity</h2>
-            <p>
-                Apply an impossible gravity strength to all fields in a level.
-            </p>
-            <label for="gravity-level-strength">Strength:</label>
-            <input type="range" name="gravity-level-strength" id="gravity-level-strength" min="1" max="1000" value="10">
-            <div class="file">
-                <label for="gravity-level-level">JSON Level File:</label>
-                <input type="file" name="gravity-level-level" id="gravity-level-level">
-            </div>
-            <button id="modify-gravity-level">Apply Gravity</button>
-        </div>
-        <img src="examples/gravity_level.png">
-    </section>
-    <section>
-        <div class="tool" id="swap">
-            <h2>Swap Types</h2>
-            <p>
-                Swap all objects of one type to another.
-            </p>
+
+    <main id="tools-content">
+        <nav>
+            <a href="#pixel">Pixel Art</a>
+            <a href="#video">Video</a>
+            <a href="#text">Block Text</a>
+            <a href="#mirror">Mirror</a>
+            <a href="#countdown">Countdown</a>
+            <a href="#circle">Circle</a>
+            <a href="#random">Randomize</a>
+            <a href="#scale">Scale</a>
+            <a href="#gravity">Gravity</a>
+            <a href="#gravityApply">Gravity apply</a>
+            <a href="#swap">Swap</a>
+            <a href="#separate">Separate</a>
+            <a href="#speed">Speed</a>
+            <a href="#grid">Grid</a>
+            <a href="#details">Details</a>
+            <a href="#help">Help</a>
+            <a href="https://discord.gg/cUMh8bSGWW" target="_blank">Discord</a>
+        </nav>
+        <header>
             <div>
-                <label for="swap-level-from">From:</label>
-                <select name="swap-level-from" id="swap-level-from">
-                    
-                </select>
+                <h1>Goober Dash Level Modding!</h1>
+                <img src="favicon.png" alt="logo">
             </div>
-            <div>
-                <label for="swap-level-to">To:</label>
-                <select name="swap-level-to" id="swap-level-to">
-                    
-                </select>
-            </div>
-            <div class="file">
-                <label for="swap-level-level">JSON Level File:</label>
-                <input type="file" name="swap-level-level" id="swap-level-level">
-            </div>
-            <button id="modify-swap-level">Swap</button>
-        </div>
-        <img src="examples/swap_level.png">
-    </section>
-    <section>
-        <div class="tool" id="separate">
-            <h2>Separate Objects</h2>
             <p>
-                Stop all objects from merging textures.
+                A bunch of silly little scripts to generate levels for <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>. Please don't rely on these tools being consistent or accurate as they may lose or break details of their outputs.
             </p>
-            <div class="file">
-                <label for="separate-level-level">JSON Level File:</label>
-                <input type="file" name="separate-level-level" id="separate-level-level">
-            </div>
-            <button id="modify-separate-level">Separate</button>
-        </div>
-        <img src="examples/separate_level.png">
-    </section>
-    <section>
-        <div class="tool" id="speed">
-            <h2>Speed Up Animations</h2>
-            <p>
-                Speed up all animations in a level.
-            </p>
-            <label for="speed-level-speed">Speed:</label>
-            <input type="range" name="speed-level-speed" id="speed-level-speed" min="2" max="100" value="2">
-            <div class="checkbox">
-                <div class="checkbox">
-                    <input type="checkbox" name="speed-level-slow" id="speed-level-slow">
-                    <label for="speed-level-slow">Slow down</label>
+        </header>
+        <section>
+            <div class="tool" id="pixel">
+                <h2>Pixel Art</h2>
+                <p>
+                    Upload an image to convert it into pixel art.
+                </p>
+                <label for="pixel-art-size-x">Width:</label>
+                <input type="range" name="pixel-art-size-x" id="pixel-art-size-x" min="1" max="100" value="10">
+                <label for="pixel-art-size-y">Height:</label>
+                <input type="range" name="pixel-art-size-y" id="pixel-art-size-y" min="1" max="100" value="10">
+                <div class="checkbox" style="display: none;">
+                    <input type="checkbox" name="pixel-art-optimise" id="pixel-art-optimise">
+                    <label for="pixel-art-optimise">Optimise:</label>
                 </div>
+                <div class="checkbox">
+                    <div class="checkbox">
+                        <input type="checkbox" name="pixel-art-double-layer" id="pixel-art-double-layer">
+                        <label for="pixel-art-double-layer">Double layer</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="pixel-art-background" id="pixel-art-background">
+                        <label for="pixel-art-background">Backgrounds only</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="pixel-art-advanced" id="pixel-art-advanced">
+                        <label for="pixel-art-advanced">Advanced</label>
+                    </div>
+                </div>
+                <div class="checkbox" id="pixel-art-advanced-options"></div>
+                <div class="file">
+                    <label for="pixel-art-image">Image:</label>
+                    <input type="file" name="pixel-art-image" id="pixel-art-image">
+                </div>
+                <button id="generate-pixel-art">Generate Pixel Art</button>
             </div>
-            <div class="file">
-                <label for="speed-level-level">JSON Level File:</label>
-                <input type="file" name="speed-level-level" id="speed-level-level">
+            <img src="examples/pixel_art2.png">
+        </section>
+        <section>
+            <div class="tool" id="video">
+                <h2>Video</h2>
+                <p>
+                    Upload a <strong>.mp4</strong> video to convert it into pixel art.
+                    <br>
+                    <strong>Note:</strong> This tool will likely lag with videos over 30x30 or 15 seconds long
+                    <br>
+                    <strong>Note:</strong> This tool may not be supported by your browser. If it doesn't work, try an up to date Chromium browser.
+                </p>
+                <label for="video-size-x">Width:</label>
+                <input type="range" name="video-size-x" id="video-size-x" min="10" max="40" value="10">
+                <label for="video-size-y">Height:</label>
+                <input type="range" name="video-size-y" id="video-size-y" min="10" max="40" value="10">
+                <div class="checkbox">
+                    <div class="checkbox">
+                        <input type="checkbox" name="video-binary" id="video-binary">
+                        <label for="video-binary">Binary</label>
+                    </div>
+                </div>
+                <div class="file">
+                    <label for="video-video">Video:</label>
+                    <input type="file" name="video-video" id="video-video">
+                </div>
+                <button id="generate-video">Generate Video</button>
             </div>
-            <button id="modify-speed-level">Speed Up</button>
-        </div>
-        <img src="examples/speed_level.png">
-    </section>
-    <section>
-        <div class="tool" id="grid">
-            <h2>Grid</h2>
-            <p>
-                Create a grid with a specified number of rows and columns.
-            </p>
-            <label for="grid-size-x">Rows:</label>
-            <input type="range" name="grid-size-x" id="grid-size-x" min="1" max="100" value="10">
-            <label for="grid-size-y">Columns:</label>
-            <input type="range" name="grid-size-y" id="grid-size-y" min="1" max="100" value="10">
-            <label for="grid-size-gap">Gap:</label>
-            <input type="range" name="grid-size-gap" id="grid-size-gap" min="1" max="100" value="1">
-            <button id="generate-grid">Generate Grid</button>
-        </div>
-        <img src="examples/grid.png">
-    </section>
-    <section>
-        <div class="tool" id="details">
-            <h2>Level Details</h2>
-            <p>
-                View details and stats about the content of a level.
-            </p>
-            <div class="file">
-                <label for="details-level">JSON Level File:</label>
-                <input type="file" name="details-level" id="details-level">
+            <img src="examples/video.png">
+        </section>
+        <section>
+            <div class="tool" id="text">
+                <h2>Block Text</h2>
+                <p>
+                    Turn text into block text or customize the font yourself.
+                </p>
+                <a id="text-download-font" href="data/Font.json" download>Download font template</a>
+                <div class="file">
+                    <label for="text-font-file">Custom Font File:</label>
+                    <input type="file" name="text-font-file" id="text-font-file">
+                </div>
+                <textarea id="text-font-text" name="text-font-text" placeholder="Enter text"></textarea>
+                <button id="generate-text">Create Text</button>
             </div>
-        </div>
-        <div id="details-output">
-            <div>
-                <span id="details-name"></span>
-                <span id="details-author_name"></span>
+            <img src="examples/text.png">
+        </section>
+        <section>
+            <div class="tool" id="mirror">
+                <h2>Mirror Level</h2>
+                <p>
+                    Mirror a level horizontally and/or vertically.
+                </p>
+                <div class="checkbox">
+                    <div class="checkbox">
+                        <input type="checkbox" name="mirror-level-vertical" id="mirror-level-vertical">
+                        <label for="mirror-level-vertical">Vertical</label>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="mirror-level-horizontal" id="mirror-level-horizontal">
+                        <label for="mirror-level-horizontal">Horizontal</label>
+                    </div>
+                </div>
+                <div class="file">
+                    <label for="mirror-level-level">JSON Level File:</label>
+                    <input type="file" name="mirror-level-level" id="mirror-level-level">
+                </div>
+                <button id="modify-mirror-level">Mirror Level</button>
+            </div>
+            <img src="examples/mirror_level.png">
+        </section>
+        <section>
+            <div class="tool" id="countdown">
+                <h2>Countdown</h2>
+                <p>
+                    Create a countdown from a number to 0.
+                </p>
+                <label for="countdown-start">Start Time:</label>
+                <input type="range" name="countdown-start" id="countdown-start" min="1" max="100" value="1">
+                <label for="countdown-speed">Speed:</label>
+                <input type="range" name="countdown-speed" id="countdown-speed" min="1" max="10" value="1">
+                <button id="generate-countdown">Generate Countdown</button>
+            </div>
+            <img src="examples/countdown.png">
+        </section>
+        <section>
+            <div class="tool" id="circle">
+                <h2>Circle</h2>
+                <p>
+                    Create a perfect circle.
+                </p>
+                <label for="circle-angle">Turn Angle:</label>
+                <input type="range" name="circle-angle" id="circle-angle" min="1" max="90" value="4">
+                <label for="circle-radius">Circle Radius:</label>
+                <input type="range" name="circle-radius" id="circle-radius" min="1" max="100" value="10">
+                <label for="circle-width">Segment Width:</label>
+                <input type="range" name="circle-width" id="circle-width" min="1" max="50" value="1">
+                <div class="checkbox">
+                    <div class="checkbox">
+                        <input type="checkbox" name="circle-full-spin" id="circle-full-spin">
+                        <label for="circle-full-spin">Full spin</label>
+                    </div>
+                </div>
+                <div class="checkbox" id="circle-advanced-options"></div>
+                <button id="generate-circle">Generate Circle</button>
+            </div>
+            <img src="examples/circle.png">
+        </section>
+        <section>
+            <div class="tool" id="sign-countdown">
+                <h2>Sign Countdown</h2>
+                <p>
+                    Create a countdown from a number to 0 (using signs).
+                </p>
+                <label for="sign-countdown-start">Start Time:</label>
+                <input type="range" name="sign-countdown-start" id="sign-countdown-start" min="1" max="100" value="1">
+                <label for="sign-countdown-speed">Speed:</label>
+                <input type="range" name="sign-countdown-speed" id="sign-countdown-speed" min="1" max="10" value="1">
+                <button id="generate-sign-countdown">Generate Countdown</button>
+            </div>
+            <img src="examples/sign_countdown.png">
+        </section>
+        <section>
+            <div class="tool" id="random">
+                <h2>Randomize Objects</h2>
+                <p>
+                    Randomly swap out all the object types in a level.
+                </p>
+                <div class="file">
+                    <label for="random-level-level">JSON Level File:</label>
+                    <input type="file" name="random-level-level" id="random-level-level">
+                </div>
+                <button id="modify-random-level">Randomize</button>
+            </div>
+            <img src="examples/random_level.png">
+        </section>
+        <section>
+            <div class="tool" id="scale">
+                <h2>Scale Level</h2>
+                <p>
+                    Scale up an entire level.
+                </p>
+                <label for="scale-level-scale">Scale:</label>
+                <input type="range" name="scale-level-scale" id="scale-level-scale" min="2" max="100" value="2">
+                <div class="file">
+                    <label for="scale-level-level">JSON Level File:</label>
+                    <input type="file" name="scale-level-level" id="scale-level-level">
+                </div>
+                <button id="modify-scale-level">Scale Level</button>
+            </div>
+            <img src="examples/scale_level.png">
+        </section>
+        <section>
+            <div class="tool" id="gravity">
+                <h2>Impossible Gravity</h2>
+                <p>
+                    Generate a Gravity Field with strength over 5.
+                </p>
+                <label for="impossible-gravity-strength">Strength:</label>
+                <input type="range" name="impossible-gravity-strength" id="impossible-gravity-strength" min="1" max="1000" value="10">
+                <button id="generate-impossible-gravity">Generate Gravity Field</button>
+            </div>
+            <img src="examples/impossible_gravity.png">
+        </section>
+        <section>
+            <div class="tool" id="gravityApply">
+                <h2>Apply Gravity</h2>
+                <p>
+                    Apply an impossible gravity strength to all fields in a level.
+                </p>
+                <label for="gravity-level-strength">Strength:</label>
+                <input type="range" name="gravity-level-strength" id="gravity-level-strength" min="1" max="1000" value="10">
+                <div class="file">
+                    <label for="gravity-level-level">JSON Level File:</label>
+                    <input type="file" name="gravity-level-level" id="gravity-level-level">
+                </div>
+                <button id="modify-gravity-level">Apply Gravity</button>
+            </div>
+            <img src="examples/gravity_level.png">
+        </section>
+        <section>
+            <div class="tool" id="swap">
+                <h2>Swap Types</h2>
+                <p>
+                    Swap all objects of one type to another.
+                </p>
                 <div>
-                    <span id="details-player_count"></span>
-                    <span id="details-game_mode"></span>
-                    <span id="details-theme"></span>
+                    <label for="swap-level-from">From:</label>
+                    <select name="swap-level-from" id="swap-level-from">
+                        
+                    </select>
+                </div>
+                <div>
+                    <label for="swap-level-to">To:</label>
+                    <select name="swap-level-to" id="swap-level-to">
+                        
+                    </select>
+                </div>
+                <div class="file">
+                    <label for="swap-level-level">JSON Level File:</label>
+                    <input type="file" name="swap-level-level" id="swap-level-level">
+                </div>
+                <button id="modify-swap-level">Swap</button>
+            </div>
+            <img src="examples/swap_level.png">
+        </section>
+        <section>
+            <div class="tool" id="separate">
+                <h2>Separate Objects</h2>
+                <p>
+                    Stop all objects from merging textures.
+                </p>
+                <div class="file">
+                    <label for="separate-level-level">JSON Level File:</label>
+                    <input type="file" name="separate-level-level" id="separate-level-level">
+                </div>
+                <button id="modify-separate-level">Separate</button>
+            </div>
+            <img src="examples/separate_level.png">
+        </section>
+        <section>
+            <div class="tool" id="speed">
+                <h2>Speed Up Animations</h2>
+                <p>
+                    Speed up all animations in a level.
+                </p>
+                <label for="speed-level-speed">Speed:</label>
+                <input type="range" name="speed-level-speed" id="speed-level-speed" min="2" max="100" value="2">
+                <div class="checkbox">
+                    <div class="checkbox">
+                        <input type="checkbox" name="speed-level-slow" id="speed-level-slow">
+                        <label for="speed-level-slow">Slow down</label>
+                    </div>
+                </div>
+                <div class="file">
+                    <label for="speed-level-level">JSON Level File:</label>
+                    <input type="file" name="speed-level-level" id="speed-level-level">
+                </div>
+                <button id="modify-speed-level">Speed Up</button>
+            </div>
+            <img src="examples/speed_level.png">
+        </section>
+        <section>
+            <div class="tool" id="grid">
+                <h2>Grid</h2>
+                <p>
+                    Create a grid with a specified number of rows and columns.
+                </p>
+                <label for="grid-size-x">Rows:</label>
+                <input type="range" name="grid-size-x" id="grid-size-x" min="1" max="100" value="10">
+                <label for="grid-size-y">Columns:</label>
+                <input type="range" name="grid-size-y" id="grid-size-y" min="1" max="100" value="10">
+                <label for="grid-size-gap">Gap:</label>
+                <input type="range" name="grid-size-gap" id="grid-size-gap" min="1" max="100" value="1">
+                <button id="generate-grid">Generate Grid</button>
+            </div>
+            <img src="examples/grid.png">
+        </section>
+        <section>
+            <div class="tool" id="details">
+                <h2>Level Details</h2>
+                <p>
+                    View details and stats about the content of a level.
+                </p>
+                <div class="file">
+                    <label for="details-level">JSON Level File:</label>
+                    <input type="file" name="details-level" id="details-level">
+                </div>
+            </div>
+            <div id="details-output">
+                <div>
+                    <span id="details-name"></span>
+                    <span id="details-author_name"></span>
+                    <div>
+                        <span id="details-player_count"></span>
+                        <span id="details-game_mode"></span>
+                        <span id="details-theme"></span>
+                    </div>
+                </div>
+                <div>
+                    <span id="details-nodes"></span>
+                    <span id="details-animations"></span>
+                    <span id="details-nodes-by-type"></span>
+                </div>
+            </div>
+        </section>
+        <section id="help">
+            <div>
+                <h2>Help</h2>
+                <div>
+                    <h3>How to use tools?</h3>
+                    <p>Most tools will output a .json file that you can open in game by dragging it onto the browser window while in the Goober Dash editor</p>
+                </div>
+                <div>
+                    <h3>Can't find a tool?</h3>
+                    <p>Use the nav bar at the top of the page to quickly find each tool. If a tool is missing from the page, you may just need to hard refresh the page to get the newest version by pressing ctrl + shift + R</p>
+                </div>
+                <div>
+                    <h3>Want another tool?</h3>
+                    <p>Feel free to message me on discord @.index and recommend new tool ideas or additions to current tools and I will likely add them to the page</p>
                 </div>
             </div>
             <div>
-                <span id="details-nodes"></span>
-                <span id="details-animations"></span>
-                <span id="details-nodes-by-type"></span>
+                <h3>Block Type Definitions</h3>
+                <div id="block-defs"></div>
             </div>
-        </div>
-    </section>
-    <section id="help">
-        <div>
-            <h2>Help</h2>
+        </section>
+    </main>
+    <main id="stats-content">
+        <nav>
+            <a href="#wins-lb">Wins</a>
+            <a href="#records-lb">Records</a>
+            <a href="https://discord.gg/cUMh8bSGWW" target="_blank">Discord</a>
+        </nav>
+        <header>
             <div>
-                <h3>How to use tools?</h3>
-                <p>Most tools will output a .json file that you can open in game by dragging it onto the browser window while in the Goober Dash editor</p>
+                <h1>Goober Dash Statistics!</h1>
+                <img src="favicon.png" alt="logo">
+            </div>
+            <p>
+                Leaderboards generated with stats scraped from <a href="https://gooberdash.winterpixel.io" target="_blank">Goober Dash</a>. Updated daily at 00:00 UTC. If you are missing on a leaderboard, get top 1000 on the seasonal leaderboard, or let me know on the discord and I can add you manually.
+            </p>
+        </header>
+        <section>
+            <div>
+                <h2>Wins</h2>
+                <div class="leaderboard" id="wins-lb">
+                    Loading...
+                </div>
             </div>
             <div>
-                <h3>Can't find a tool?</h3>
-                <p>Use the nav bar at the top of the page to quickly find each tool. If a tool is missing from the page, you may just need to hard refresh the page to get the newest version by pressing ctrl + shift + R</p>
+                <h2>Records <span class="hint">(Certified Race maps)</span></h2>
+                <div class="leaderboard" id="records-lb">
+                    Loading...
+                </div>
             </div>
-            <div>
-                <h3>Want another tool?</h3>
-                <p>Feel free to message me on discord @.index and recommend new tool ideas or additions to current tools and I will likely add them to the page</p>
-            </div>
-        </div>
-        <div>
-            <h3>Block Type Definitions</h3>
-            <div id="block-defs"></div>
-        </div>
-    </section>
+        </section>
+    </main>
+    
     <footer>
         <p>
             Created by <a href="https://github.com/twhlynch" target="_blank">.index</a> • <a href="https://github.com/twhlynch/goober-dash-level-modding" target="_blank">src</a> • <a href="https://discord.gg/cUMh8bSGWW" target="_blank">discord</a>
