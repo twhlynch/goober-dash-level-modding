@@ -591,6 +591,16 @@ textarea {
     font-size: 0.8rem;
     display: inline-block;
     text-shadow: none;
+    position: absolute;
+    left: 0.2rem;
+    bottom: -0.8rem;
+}
+.lb-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 1rem;
 }
 
 @media only screen and (max-width: 768px) {

@@ -1356,13 +1356,21 @@ async function loadStats() {
             const usernameElement = document.createElement("span");
             usernameElement.textContent = entry.username;
             const valueElement = document.createElement("span");
-            valueElement.textContent = entry.wins || entry.records;
+            valueElement.textContent = entry[leaderboard];
 
             rowElement.appendChild(positionElement);
             rowElement.appendChild(usernameElement);
             rowElement.appendChild(valueElement);
             container.appendChild(rowElement);
         }
+
+        const csvButton = document.getElementById(`${leaderboard}-csv`);
+        csvButton.href = `data:text/csv;charset=utf-8,username,${leaderboard}\n${
+            encodeURIComponent(leaderboardsData[leaderboard].map(
+                entry => `${entry.username.replaceAll('\n', '')},${entry[leaderboard]}`
+            ).join("\n"))
+        }`;
+        csvButton.download = `${leaderboard}_leaderboard.csv`;
     }
 }
 
