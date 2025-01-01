@@ -198,7 +198,7 @@ function init() {
             const content = document.getElementById(`${tab.id}-content`);
                 content.style.display = "block";
             currentTab = tab.id;
-            window.history.pushState({}, "", `?tab=${currentTab}`);
+            window.history.pushState({}, "", `?tab=${currentTab}${window.location.hash}`);
         });
         if (tab.id === currentTab) {
             tab.click();
