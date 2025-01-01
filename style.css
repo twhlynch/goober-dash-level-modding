@@ -286,6 +286,13 @@ input[type="file"] {
     margin-block: 1em;
 }
 
+input[type="text"] {
+    margin-bottom: 1em;
+    padding: 0.5em;
+    border-radius: 5px;
+    border: 2px solid var(--color-highlight);
+}
+
 a {
     color: var(--color-highlight);
     text-decoration: none;
