@@ -1323,8 +1323,12 @@ const api_url = "https://goober-dash-stats-api.onrender.com";
 
 const statsTab = document.getElementById("stats");
 statsTab.addEventListener("click", loadStats);
+let statsLoaded = false;
 
 async function loadStats() {
+    if (statsLoaded) return;
+    statsLoaded = true;
+
     const leaderboards = ["wins", "records"];
 
     const promises = [];
