@@ -1329,7 +1329,7 @@ async function loadStats() {
     if (statsLoaded) return;
     statsLoaded = true;
 
-    const leaderboards = ["wins", "records", "winstreak", "winrate", "games", "deaths"];
+    const leaderboards = ["wins", "records", "winstreak", "winrate", "games", "deaths", "levels"];
 
     const promises = [];
     for (const leaderboard of leaderboards) {
