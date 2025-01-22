@@ -570,6 +570,12 @@ textarea {
     gap: 1rem;
     border-bottom: 1px solid var(--color-background-alt);
 }
+#popup-comparison, #popup-change {
+    display: none;
+}
+#popup-comparison .lb-row {
+    grid-template-columns: 1rem 1fr auto auto;
+}
 .lb-row:last-child {
     border-bottom: none;
 }
@@ -585,6 +591,18 @@ textarea {
 .lb-row span:nth-child(3) {
     font-weight: 600;
     color: var(--color-primary)
+}
+#popup-comparison .lb-row span:nth-child(3) {
+    font-weight: 400;
+    color: var(--color-secondary)
+}
+#popup-comparison .lb-row span:nth-child(3) b {
+    font-weight: 600;
+    color: var(--color-primary)
+}
+#popup-comparison .lb-row span:nth-child(4) {
+    font-weight: 600;
+    color: var(--color-highlight)
 }
 .hint {
     color: var(--color-secondary);

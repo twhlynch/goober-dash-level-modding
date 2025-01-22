@@ -1369,11 +1369,132 @@ async function loadStats() {
         const csvButton = document.getElementById(`${leaderboard}-csv`);
         csvButton.href = `data:text/csv;charset=utf-8,id,username,${leaderboard}\n${
             encodeURIComponent(leaderboardsData[leaderboard].map(
-                entry => `${entry.id},${entry.username.replaceAll('\n', '')},${entry[leaderboard]}`
+                entry => `${entry.id},${entry.username.replaceAll(/\n|"|'|,/g, '')},${entry[leaderboard]}`
             ).join("\n"))
         }`;
         csvButton.download = `${leaderboard}_leaderboard.csv`;
     }
+
+    document.addEventListener("dragover", function(event) {
+        event.preventDefault();
+    });
+    addEventListener('drop', (e) => {
+        const params = new URLSearchParams(window.location.search);
+        let currentTab = params.get("tab") || "tools";
+        if (currentTab == 'tools') return;
+    
+        const files = e.dataTransfer.files;
+        if (!files?.length) return;
+    
+        const file = files[0];
+        if (!file.name.endsWith(".csv")) return;
+    
+        e.preventDefault();
+    
+        const reader = new FileReader();
+        reader.onload = () => {
+            const csvData = reader.result;
+            const rows = csvData.split("\n").map(row => row.split(","));
+            const type = rows[0][2];
+
+            const oldLeaderboard = [];
+            for (let i = 1; i < rows.length - 1; i++) {
+                const row = rows[i];
+                oldLeaderboard.push({
+                    id: row[0],
+                    username: row[1],
+                    [type]: parseFloat(row[2])
+                });
+            }
+
+            const changeLeaderboard = [];
+            for (let entry of oldLeaderboard) {
+                changeLeaderboard.push({
+                    id: entry.id,
+                    username: entry.username,
+                    ['old_'+type]: entry[type],
+                    ['current_'+type]: entry[type],
+                    ['change_'+type]: 0,
+                });
+            }
+            for (let entry of leaderboardsData[type]) {
+                if (!changeLeaderboard.find(e => e.id == entry.id)) {
+                    changeLeaderboard.push({
+                        id: entry.id,
+                        username: entry.username,
+                        ['old_'+type]: entry[type],
+                        ['current_'+type]: entry[type],
+                        ['change_'+type]: 0,
+                    });
+                } else {
+                    const index = changeLeaderboard.findIndex(e => e.id == entry.id);
+                    changeLeaderboard[index]['current_'+type] = entry[type];
+                    changeLeaderboard[index]['change_'+type] = entry[type] - changeLeaderboard[index]['old_'+type];
+                }
+            }
+
+            const sortedByChangeLeaderboard = [...changeLeaderboard].sort((a, b) => b['change_'+type] - a['change_'+type]);
+
+            // scuffed :/
+            for (const extraLeaderboard of [
+                [changeLeaderboard, 'comparison'],
+                [sortedByChangeLeaderboard, 'change']
+            ]) {
+                const extra_leaderboard = extraLeaderboard[0];
+                const extra_label = extraLeaderboard[1];
+
+                const wrapper = document.getElementById(`popup-${extra_label}`);
+                const displayTitle = wrapper.querySelector('h2');
+                displayTitle.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} ${extra_label.charAt(0).toUpperCase() + extra_label.slice(1)}`;
+                wrapper.style.display = 'block';
+                const container = document.getElementById(`${extra_label}-lb`);
+                container.innerHTML = "";
+                for (const i in extra_leaderboard) {
+                    const entry = extra_leaderboard[i];
+                    const rowElement = document.createElement("div");
+                    rowElement.classList.add("lb-row");
+
+                    const positionElement = document.createElement("span");
+                    positionElement.textContent = parseInt(i) + 1;
+                    const usernameElement = document.createElement("span");
+                    usernameElement.textContent = entry.username;
+
+                    rowElement.appendChild(positionElement);
+                    rowElement.appendChild(usernameElement);
+
+                    if (extra_label == 'comparison') {
+                        const valueElement = document.createElement("span");
+                        let oldValue = entry['old_'+type];
+                        let currentValue = entry['current_'+type];
+                        if (type === "winrate") {
+                            oldValue = (oldValue * 100).toFixed(1) + "%";
+                            currentValue = (currentValue * 100).toFixed(1) + "%";
+                        }
+                        valueElement.innerHTML = oldValue + ' → <b>' + currentValue + '</b>';
+                        rowElement.appendChild(valueElement);
+                    }
+
+                    const changeElement = document.createElement("span");
+                    let changeValue = entry['change_'+type];
+                    if (type === "winrate") changeValue = (changeValue * 100).toFixed(1) + "%";
+                    changeElement.textContent = '+'+changeValue;
+
+                    rowElement.appendChild(changeElement);
+                    container.appendChild(rowElement);
+                }
+
+                const csvButton = document.getElementById(`${extra_label}-csv`);
+                csvButton.href = `data:text/csv;charset=utf-8,id,username,${extra_label == 'comparison' && `old_${type},current_${type},`}change_${type}\n${
+                    encodeURIComponent(extra_leaderboard.map(
+                        entry => `${entry.id},${entry.username.replaceAll(/\n|"|'|,/g, '')},${extra_label == 'comparison' && `${entry['old_'+type]},${entry['current_'+type]}`},${entry['change_'+type]}`
+                    ).join("\n"))
+                }`;
+                csvButton.download = `${type}_${extra_label}_leaderboard.csv`;
+            }
+        };
+
+        reader.readAsText(file);
+    });
 }
 
 //#region runtime events
