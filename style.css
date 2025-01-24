@@ -621,6 +621,19 @@ textarea {
     justify-content: space-between;
     padding-inline: 1rem;
 }
+.lb-header h2 {
+    margin-bottom: 0;
+}
+.date {
+    padding-right: 2rem;
+    color: var(--color-secondary);
+    opacity: 0.5;
+    font-weight: 400;
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: right;
+    display: block;
+}
 
 @media only screen and (max-width: 768px) {
     section {

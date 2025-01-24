@@ -1331,6 +1331,8 @@ async function loadStats() {
 
     const leaderboards = ["wins", "records", "winstreak", "winrate", "games", "deaths", "levels"];
 
+    const currentDate = new Date();
+
     const promises = [];
     for (const leaderboard of leaderboards) {
         promises.push(fetch(`${api_url}/${leaderboard}_leaderboard.json`));
@@ -1345,6 +1347,7 @@ async function loadStats() {
 
     for (const leaderboard of leaderboards) {
         const container = document.getElementById(`${leaderboard}-lb`);
+        container.parentElement.querySelector('.date').textContent = currentDate.toLocaleDateString();
         container.innerHTML = "";
         for (const i in leaderboardsData[leaderboard]) {
             const entry = leaderboardsData[leaderboard][i];
@@ -1372,7 +1375,7 @@ async function loadStats() {
                 entry => `${entry.id},${entry.username.replaceAll(/\n|"|'|,/g, '')},${entry[leaderboard]}`
             ).join("\n"))
         }`;
-        csvButton.download = `${leaderboard}_leaderboard.csv`;
+        csvButton.download = `${leaderboard}_leaderboard_${currentDate.getTime()}.csv`;
     }
 
     document.addEventListener("dragover", function(event) {
@@ -1390,6 +1393,13 @@ async function loadStats() {
         if (!file.name.endsWith(".csv")) return;
     
         e.preventDefault();
+
+        const parts = file.name.split('_');
+        let oldDate = undefined;
+        if (parts.length == 3) {
+            const timestamp = parseInt(parts[2]);
+            oldDate = new Date(timestamp);
+        }
     
         const reader = new FileReader();
         reader.onload = () => {
@@ -1448,6 +1458,7 @@ async function loadStats() {
                 displayTitle.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} ${extra_label.charAt(0).toUpperCase() + extra_label.slice(1)}`;
                 wrapper.style.display = 'block';
                 const container = document.getElementById(`${extra_label}-lb`);
+                container.parentElement.querySelector('.date').textContent = (oldDate ? oldDate.toLocaleDateString() + ' → ' : '') + currentDate.toLocaleDateString();
                 container.innerHTML = "";
                 for (const i in extra_leaderboard) {
                     const entry = extra_leaderboard[i];
