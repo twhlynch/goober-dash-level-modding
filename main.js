@@ -1355,6 +1355,7 @@ async function loadStats() {
         for (const i in leaderboardsData[leaderboard]) {
             const entry = leaderboardsData[leaderboard][i];
             const rowElement = document.createElement("div");
+            rowElement.setAttribute("data-id", entry.id);
             rowElement.classList.add("lb-row");
 
             const positionElement = document.createElement("span");
@@ -1466,6 +1467,7 @@ async function loadStats() {
                 for (const i in extra_leaderboard) {
                     const entry = extra_leaderboard[i];
                     const rowElement = document.createElement("div");
+                    rowElement.setAttribute("data-id", entry.id);
                     rowElement.classList.add("lb-row");
 
                     const positionElement = document.createElement("span");
