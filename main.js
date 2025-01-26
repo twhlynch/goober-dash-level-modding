@@ -1337,13 +1337,16 @@ async function loadStats() {
     for (const leaderboard of leaderboards) {
         promises.push(fetch(`${api_url}/${leaderboard}_leaderboard.json`));
     }
+    promises.push(fetch(`data/user_overrides.json`));
     const responses = await Promise.all(promises);
 
     const leaderboardsData = {};
-    for (const [index, response] of responses.entries()) {
+    for (let i = 0; i < responses.length - 1; i++) {
+        const response = responses[i];
         const leaderboardData = await response.json();
-        leaderboardsData[leaderboards[index]] = leaderboardData;
+        leaderboardsData[leaderboards[i]] = leaderboardData;
     }
+    const userOverrides = await responses[responses.length - 1].json();
 
     for (const leaderboard of leaderboards) {
         const container = document.getElementById(`${leaderboard}-lb`);
@@ -1357,7 +1360,7 @@ async function loadStats() {
             const positionElement = document.createElement("span");
             positionElement.textContent = parseInt(i) + 1;
             const usernameElement = document.createElement("span");
-            usernameElement.textContent = entry.username;
+            usernameElement.textContent = entry.id in userOverrides ? userOverrides[entry.id] : entry.username;
             const valueElement = document.createElement("span");
             let value = entry[leaderboard];
             if (leaderboard === "winrate") value = (value * 100).toFixed(1) + "%";
@@ -1468,7 +1471,7 @@ async function loadStats() {
                     const positionElement = document.createElement("span");
                     positionElement.textContent = parseInt(i) + 1;
                     const usernameElement = document.createElement("span");
-                    usernameElement.textContent = entry.username;
+                    usernameElement.textContent = entry.id in userOverrides ? userOverrides[entry.id] : entry.username;
 
                     rowElement.appendChild(positionElement);
                     rowElement.appendChild(usernameElement);
