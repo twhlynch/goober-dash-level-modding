@@ -1346,12 +1346,15 @@ async function loadStats() {
         const leaderboardData = await response.json();
         leaderboardsData[leaderboards[i]] = leaderboardData;
     }
-    const userOverrides = await responses[responses.length - 1].json();
+    const userOverridesData = await responses[responses.length - 1].json();
+    const userOverrides = userOverridesData.names;
+    const userAlts = userOverridesData.alts;
 
     for (const leaderboard of leaderboards) {
         const container = document.getElementById(`${leaderboard}-lb`);
         container.parentElement.querySelector('.date').textContent = currentDate.toLocaleDateString();
         container.innerHTML = "";
+        let offset = 1;
         for (const i in leaderboardsData[leaderboard]) {
             const entry = leaderboardsData[leaderboard][i];
             const rowElement = document.createElement("div");
@@ -1359,7 +1362,13 @@ async function loadStats() {
             rowElement.classList.add("lb-row");
 
             const positionElement = document.createElement("span");
-            positionElement.textContent = parseInt(i) + 1;
+            if (userAlts.includes(entry.id)) {
+                rowElement.classList.add("alt-account");
+                offset--;
+            } else {
+                positionElement.textContent = parseInt(i) + offset;
+            }
+
             const usernameElement = document.createElement("span");
             usernameElement.textContent = entry.id in userOverrides ? userOverrides[entry.id] : entry.username;
             const valueElement = document.createElement("span");
@@ -1464,6 +1473,7 @@ async function loadStats() {
                 const container = document.getElementById(`${extra_label}-lb`);
                 container.parentElement.querySelector('.date').textContent = (oldDate ? oldDate.toLocaleDateString() + ' → ' : '') + currentDate.toLocaleDateString();
                 container.innerHTML = "";
+                let offset = 1;
                 for (const i in extra_leaderboard) {
                     const entry = extra_leaderboard[i];
                     const rowElement = document.createElement("div");
@@ -1471,7 +1481,13 @@ async function loadStats() {
                     rowElement.classList.add("lb-row");
 
                     const positionElement = document.createElement("span");
-                    positionElement.textContent = parseInt(i) + 1;
+                    if (userAlts.includes(entry.id)) {
+                        rowElement.classList.add("alt-account");
+                        offset--;
+                    } else {
+                        positionElement.textContent = parseInt(i) + offset;
+                    }
+
                     const usernameElement = document.createElement("span");
                     usernameElement.textContent = entry.id in userOverrides ? userOverrides[entry.id] : entry.username;
 

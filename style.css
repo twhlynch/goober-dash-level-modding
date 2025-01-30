@@ -570,6 +570,9 @@ textarea {
     gap: 1rem;
     border-bottom: 1px solid var(--color-background-alt);
 }
+.alt-account {
+    opacity: 0.5;
+}
 #popup-comparison, #popup-change {
     display: none;
 }
