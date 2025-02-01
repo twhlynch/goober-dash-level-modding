@@ -1325,13 +1325,176 @@ const statsTab = document.getElementById("stats");
 statsTab.addEventListener("click", loadStats);
 let statsLoaded = false;
 
+let altSettings = localStorage.getItem("gd-alt-settings") || "fade";
+const altSettingsButtons = document.querySelectorAll('.alt-option');
+altSettingsButtons.forEach((e) => {
+    if (e.textContent == altSettings) e.classList.add("active");
+    e.addEventListener('click', () => {
+        const current = document.querySelector('.alt-option.active');
+        if (current) current.classList.remove('active');
+        e.classList.add('active');
+        altSettings = e.textContent;
+        localStorage.setItem("gd-alt-settings", altSettings);
+        createLeaderboards();
+    });
+});
+
+const leaderboards = ["wins", "records", "winstreak", "winrate", "games", "deaths", "levels"];
+const currentDate = new Date();
+const leaderboardsData = {};
+let top100wins
+let userOverridesData;
+
+function loadComparison(e) {
+    const params = new URLSearchParams(window.location.search);
+    let currentTab = params.get("tab") || "tools";
+    if (currentTab == 'tools') return;
+
+    const files = e.dataTransfer.files;
+    if (!files?.length) return;
+
+    const file = files[0];
+    if (!file.name.endsWith(".csv")) return;
+
+    e.preventDefault();
+
+    const parts = file.name.split('_');
+    let oldDate = undefined;
+    if (parts.length == 3) {
+        const timestamp = parseInt(parts[2]);
+        oldDate = new Date(timestamp);
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+        const csvData = reader.result;
+        const rows = csvData.split("\n").map(row => row.split(","));
+        const type = rows[0][2];
+
+        const oldLeaderboard = [];
+        for (let i = 1; i < rows.length - 1; i++) {
+            const row = rows[i];
+            oldLeaderboard.push({
+                id: row[0],
+                username: row[1],
+                [type]: parseFloat(row[2])
+            });
+        }
+
+        const changeLeaderboard = [];
+        for (let entry of oldLeaderboard) {
+            changeLeaderboard.push({
+                id: entry.id,
+                username: entry.username,
+                ['old_'+type]: entry[type],
+                ['current_'+type]: entry[type],
+                ['change_'+type]: 0,
+            });
+        }
+        for (let entry of leaderboardsData[type]) {
+            if (!changeLeaderboard.find(e => e.id == entry.id)) {
+                changeLeaderboard.push({
+                    id: entry.id,
+                    username: entry.username,
+                    ['old_'+type]: entry[type],
+                    ['current_'+type]: entry[type],
+                    ['change_'+type]: 0,
+                });
+            } else {
+                const index = changeLeaderboard.findIndex(e => e.id == entry.id);
+                changeLeaderboard[index]['current_'+type] = entry[type];
+                changeLeaderboard[index]['change_'+type] = entry[type] - changeLeaderboard[index]['old_'+type];
+            }
+        }
+
+        const sortedByChangeLeaderboard = [...changeLeaderboard].sort((a, b) => b['change_'+type] - a['change_'+type]);
+
+        // scuffed :/
+        for (const extraLeaderboard of [
+            [changeLeaderboard, 'comparison'],
+            [sortedByChangeLeaderboard, 'change']
+        ]) {
+            const extra_leaderboard = extraLeaderboard[0];
+            const extra_label = extraLeaderboard[1];
+
+            const wrapper = document.getElementById(`popup-${extra_label}`);
+            const displayTitle = wrapper.querySelector('h2');
+            displayTitle.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} ${extra_label.charAt(0).toUpperCase() + extra_label.slice(1)}`;
+            wrapper.style.display = 'block';
+            const container = document.getElementById(`${extra_label}-lb`);
+            container.parentElement.querySelector('.date').textContent = (oldDate ? oldDate.toLocaleDateString() + ' → ' : '') + currentDate.toLocaleDateString();
+            container.innerHTML = "";
+            let offset = 1;
+            for (const i in extra_leaderboard) {
+                const entry = extra_leaderboard[i];
+
+                if (type == "winrate") {
+                    if (!top100wins.includes(entry.id)) {
+                        offset--;
+                        continue;
+                    }
+                }
+                const isAlt = userOverridesData.alts.includes(entry.id);
+                if (altSettings == "hide" && isAlt) {
+                    offset--;
+                    continue;
+                }
+
+                const rowElement = document.createElement("div");
+                rowElement.setAttribute("data-id", entry.id);
+                rowElement.classList.add("lb-row");
+
+                const positionElement = document.createElement("span");
+                if (altSettings == "fade" && isAlt) {
+                    rowElement.classList.add("alt-account");
+                    offset--;
+                } else {
+                    positionElement.textContent = parseInt(i) + offset;
+                }
+
+                const usernameElement = document.createElement("span");
+                usernameElement.textContent = entry.id in userOverridesData.names ? userOverridesData.names[entry.id] : entry.username;
+
+                rowElement.appendChild(positionElement);
+                rowElement.appendChild(usernameElement);
+
+                if (extra_label == 'comparison') {
+                    const valueElement = document.createElement("span");
+                    let oldValue = entry['old_'+type];
+                    let currentValue = entry['current_'+type];
+                    if (type === "winrate") {
+                        oldValue = (oldValue * 100).toFixed(1) + "%";
+                        currentValue = (currentValue * 100).toFixed(1) + "%";
+                    }
+                    valueElement.innerHTML = oldValue + ' → <b>' + currentValue + '</b>';
+                    rowElement.appendChild(valueElement);
+                }
+
+                const changeElement = document.createElement("span");
+                let changeValue = entry['change_'+type];
+                if (type === "winrate") changeValue = (changeValue * 100).toFixed(1) + "%";
+                changeElement.textContent = '+'+changeValue;
+
+                rowElement.appendChild(changeElement);
+                container.appendChild(rowElement);
+            }
+
+            const csvButton = document.getElementById(`${extra_label}-csv`);
+            csvButton.href = `data:text/csv;charset=utf-8,id,username,${extra_label == 'comparison' && `old_${type},current_${type},`}change_${type}\n${
+                encodeURIComponent(extra_leaderboard.map(
+                    entry => `${entry.id},${entry.username.replaceAll(/\n|"|'|,/g, '')},${extra_label == 'comparison' && `${entry['old_'+type]},${entry['current_'+type]}`},${entry['change_'+type]}`
+                ).join("\n"))
+            }`;
+            csvButton.download = `${type}_${extra_label}_leaderboard.csv`;
+        }
+    };
+
+    reader.readAsText(file);
+}
+
 async function loadStats() {
     if (statsLoaded) return;
     statsLoaded = true;
-
-    const leaderboards = ["wins", "records", "winstreak", "winrate", "games", "deaths", "levels"];
-
-    const currentDate = new Date();
 
     const promises = [];
     for (const leaderboard of leaderboards) {
@@ -1340,17 +1503,23 @@ async function loadStats() {
     promises.push(fetch(`data/user_overrides.json`));
     const responses = await Promise.all(promises);
 
-    const leaderboardsData = {};
     for (let i = 0; i < responses.length - 1; i++) {
         const response = responses[i];
         const leaderboardData = await response.json();
         leaderboardsData[leaderboards[i]] = leaderboardData;
     }
-    const top100wins = [...leaderboardsData["wins"]].slice(0, 100).map(e => e.id);
-    const userOverridesData = await responses[responses.length - 1].json();
-    const userOverrides = userOverridesData.names;
-    const userAlts = userOverridesData.alts;
+    top100wins = [...leaderboardsData["wins"]].slice(0, 100).map(e => e.id);
+    userOverridesData = await responses[responses.length - 1].json();
 
+    createLeaderboards();
+
+    document.addEventListener("dragover", (e) => {
+        e.preventDefault();
+    });
+    addEventListener('drop', loadComparison);
+}
+
+function createLeaderboards() {
     for (const leaderboard of leaderboards) {
         const container = document.getElementById(`${leaderboard}-lb`);
         container.parentElement.querySelector('.date').textContent = currentDate.toLocaleDateString();
@@ -1365,13 +1534,18 @@ async function loadStats() {
                     continue;
                 }
             }
+            const isAlt = userOverridesData.alts.includes(entry.id);
+            if (altSettings == "hide" && isAlt) {
+                offset--;
+                continue;
+            }
 
             const rowElement = document.createElement("div");
             rowElement.setAttribute("data-id", entry.id);
             rowElement.classList.add("lb-row");
 
             const positionElement = document.createElement("span");
-            if (userAlts.includes(entry.id)) {
+            if (altSettings == "fade" && isAlt) {
                 rowElement.classList.add("alt-account");
                 offset--;
             } else {
@@ -1379,7 +1553,7 @@ async function loadStats() {
             }
 
             const usernameElement = document.createElement("span");
-            usernameElement.textContent = entry.id in userOverrides ? userOverrides[entry.id] : entry.username;
+            usernameElement.textContent = entry.id in userOverridesData.names ? userOverridesData.names[entry.id] : entry.username;
             const valueElement = document.createElement("span");
             let value = entry[leaderboard];
             if (leaderboard === "winrate") value = (value * 100).toFixed(1) + "%";
@@ -1399,143 +1573,6 @@ async function loadStats() {
         }`;
         csvButton.download = `${leaderboard}_leaderboard_${currentDate.getTime()}.csv`;
     }
-
-    document.addEventListener("dragover", function(event) {
-        event.preventDefault();
-    });
-    addEventListener('drop', (e) => {
-        const params = new URLSearchParams(window.location.search);
-        let currentTab = params.get("tab") || "tools";
-        if (currentTab == 'tools') return;
-    
-        const files = e.dataTransfer.files;
-        if (!files?.length) return;
-    
-        const file = files[0];
-        if (!file.name.endsWith(".csv")) return;
-    
-        e.preventDefault();
-
-        const parts = file.name.split('_');
-        let oldDate = undefined;
-        if (parts.length == 3) {
-            const timestamp = parseInt(parts[2]);
-            oldDate = new Date(timestamp);
-        }
-    
-        const reader = new FileReader();
-        reader.onload = () => {
-            const csvData = reader.result;
-            const rows = csvData.split("\n").map(row => row.split(","));
-            const type = rows[0][2];
-
-            const oldLeaderboard = [];
-            for (let i = 1; i < rows.length - 1; i++) {
-                const row = rows[i];
-                oldLeaderboard.push({
-                    id: row[0],
-                    username: row[1],
-                    [type]: parseFloat(row[2])
-                });
-            }
-
-            const changeLeaderboard = [];
-            for (let entry of oldLeaderboard) {
-                changeLeaderboard.push({
-                    id: entry.id,
-                    username: entry.username,
-                    ['old_'+type]: entry[type],
-                    ['current_'+type]: entry[type],
-                    ['change_'+type]: 0,
-                });
-            }
-            for (let entry of leaderboardsData[type]) {
-                if (!changeLeaderboard.find(e => e.id == entry.id)) {
-                    changeLeaderboard.push({
-                        id: entry.id,
-                        username: entry.username,
-                        ['old_'+type]: entry[type],
-                        ['current_'+type]: entry[type],
-                        ['change_'+type]: 0,
-                    });
-                } else {
-                    const index = changeLeaderboard.findIndex(e => e.id == entry.id);
-                    changeLeaderboard[index]['current_'+type] = entry[type];
-                    changeLeaderboard[index]['change_'+type] = entry[type] - changeLeaderboard[index]['old_'+type];
-                }
-            }
-
-            const sortedByChangeLeaderboard = [...changeLeaderboard].sort((a, b) => b['change_'+type] - a['change_'+type]);
-
-            // scuffed :/
-            for (const extraLeaderboard of [
-                [changeLeaderboard, 'comparison'],
-                [sortedByChangeLeaderboard, 'change']
-            ]) {
-                const extra_leaderboard = extraLeaderboard[0];
-                const extra_label = extraLeaderboard[1];
-
-                const wrapper = document.getElementById(`popup-${extra_label}`);
-                const displayTitle = wrapper.querySelector('h2');
-                displayTitle.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} ${extra_label.charAt(0).toUpperCase() + extra_label.slice(1)}`;
-                wrapper.style.display = 'block';
-                const container = document.getElementById(`${extra_label}-lb`);
-                container.parentElement.querySelector('.date').textContent = (oldDate ? oldDate.toLocaleDateString() + ' → ' : '') + currentDate.toLocaleDateString();
-                container.innerHTML = "";
-                let offset = 1;
-                for (const i in extra_leaderboard) {
-                    const entry = extra_leaderboard[i];
-                    const rowElement = document.createElement("div");
-                    rowElement.setAttribute("data-id", entry.id);
-                    rowElement.classList.add("lb-row");
-
-                    const positionElement = document.createElement("span");
-                    if (userAlts.includes(entry.id)) {
-                        rowElement.classList.add("alt-account");
-                        offset--;
-                    } else {
-                        positionElement.textContent = parseInt(i) + offset;
-                    }
-
-                    const usernameElement = document.createElement("span");
-                    usernameElement.textContent = entry.id in userOverrides ? userOverrides[entry.id] : entry.username;
-
-                    rowElement.appendChild(positionElement);
-                    rowElement.appendChild(usernameElement);
-
-                    if (extra_label == 'comparison') {
-                        const valueElement = document.createElement("span");
-                        let oldValue = entry['old_'+type];
-                        let currentValue = entry['current_'+type];
-                        if (type === "winrate") {
-                            oldValue = (oldValue * 100).toFixed(1) + "%";
-                            currentValue = (currentValue * 100).toFixed(1) + "%";
-                        }
-                        valueElement.innerHTML = oldValue + ' → <b>' + currentValue + '</b>';
-                        rowElement.appendChild(valueElement);
-                    }
-
-                    const changeElement = document.createElement("span");
-                    let changeValue = entry['change_'+type];
-                    if (type === "winrate") changeValue = (changeValue * 100).toFixed(1) + "%";
-                    changeElement.textContent = '+'+changeValue;
-
-                    rowElement.appendChild(changeElement);
-                    container.appendChild(rowElement);
-                }
-
-                const csvButton = document.getElementById(`${extra_label}-csv`);
-                csvButton.href = `data:text/csv;charset=utf-8,id,username,${extra_label == 'comparison' && `old_${type},current_${type},`}change_${type}\n${
-                    encodeURIComponent(extra_leaderboard.map(
-                        entry => `${entry.id},${entry.username.replaceAll(/\n|"|'|,/g, '')},${extra_label == 'comparison' && `${entry['old_'+type]},${entry['current_'+type]}`},${entry['change_'+type]}`
-                    ).join("\n"))
-                }`;
-                csvButton.download = `${type}_${extra_label}_leaderboard.csv`;
-            }
-        };
-
-        reader.readAsText(file);
-    });
 }
 
 //#region runtime events

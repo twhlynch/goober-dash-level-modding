@@ -99,6 +99,24 @@ header + section {
     border-top: 1px solid var(--color-highlight);
 }
 
+#options {
+    display: flex;
+    gap: 0.6em;
+    align-items: center;
+    justify-content: flex-end;
+    padding-block: 0;
+    border-bottom: none;
+
+    button {
+        padding: 0.2em 0.8em;
+
+        &.active {
+            background-color: var(--color-highlight);
+            color: var(--color-primary)
+        }
+    }
+}
+
 nav {
     width: 100%;
     display: flex;
