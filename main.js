@@ -1346,6 +1346,7 @@ async function loadStats() {
         const leaderboardData = await response.json();
         leaderboardsData[leaderboards[i]] = leaderboardData;
     }
+    const top100wins = [...leaderboardsData["wins"]].slice(0, 100).map(e => e.id);
     const userOverridesData = await responses[responses.length - 1].json();
     const userOverrides = userOverridesData.names;
     const userAlts = userOverridesData.alts;
@@ -1357,6 +1358,14 @@ async function loadStats() {
         let offset = 1;
         for (const i in leaderboardsData[leaderboard]) {
             const entry = leaderboardsData[leaderboard][i];
+
+            if (leaderboard == "winrate") {
+                if (!top100wins.includes(entry.id)) {
+                    offset--;
+                    continue;
+                }
+            }
+
             const rowElement = document.createElement("div");
             rowElement.setAttribute("data-id", entry.id);
             rowElement.classList.add("lb-row");
