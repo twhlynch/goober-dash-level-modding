@@ -1342,7 +1342,7 @@ altSettingsButtons.forEach((e) => {
 const leaderboards = ["wins", "records", "winstreak", "winrate", "games", "deaths", "levels"];
 const currentDate = new Date();
 const leaderboardsData = {};
-let top100wins
+// let topWins;
 let userOverridesData;
 
 function loadComparison(e) {
@@ -1428,12 +1428,12 @@ function loadComparison(e) {
             for (const i in extra_leaderboard) {
                 const entry = extra_leaderboard[i];
 
-                if (type == "winrate") {
-                    if (!top100wins.includes(entry.id)) {
-                        offset--;
-                        continue;
-                    }
-                }
+                // if (type == "winrate") {
+                //     if (!topWins.includes(entry.id)) {
+                //         offset--;
+                //         continue;
+                //     }
+                // }
                 const isAlt = userOverridesData.alts.includes(entry.id);
                 if (altSettings == "hide" && isAlt) {
                     offset--;
@@ -1508,7 +1508,7 @@ async function loadStats() {
         const leaderboardData = await response.json();
         leaderboardsData[leaderboards[i]] = leaderboardData;
     }
-    top100wins = [...leaderboardsData["wins"]].slice(0, 100).map(e => e.id);
+    // topWins = [...leaderboardsData["wins"]].slice(0, 100).map(e => e.id);
     userOverridesData = await responses[responses.length - 1].json();
 
     createLeaderboards();
@@ -1528,12 +1528,12 @@ function createLeaderboards() {
         for (const i in leaderboardsData[leaderboard]) {
             const entry = leaderboardsData[leaderboard][i];
 
-            if (leaderboard == "winrate") {
-                if (!top100wins.includes(entry.id)) {
-                    offset--;
-                    continue;
-                }
-            }
+            // if (leaderboard == "winrate") {
+            //     if (!topWins.includes(entry.id)) {
+            //         offset--;
+            //         continue;
+            //     }
+            // }
             const isAlt = userOverridesData.alts.includes(entry.id);
             if (altSettings == "hide" && isAlt) {
                 offset--;
