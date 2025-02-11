@@ -1517,6 +1517,19 @@ async function loadStats() {
         e.preventDefault();
     });
     addEventListener('drop', loadComparison);
+
+    // winrate
+    let buffer = [];
+    const string = "winrate";
+    window.addEventListener("keydown", (e) => {
+        buffer.push(e.key.toLowerCase());
+        if (buffer.length == string.length + 1) {
+            buffer.shift();
+        }
+        if (buffer.join('') == string) {
+            document.getElementById("winrate-lb-container").style.display = "block";
+        }
+    });
 }
 
 function createLeaderboards() {
