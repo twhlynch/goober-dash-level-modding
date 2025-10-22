@@ -498,6 +498,13 @@ a:hover {
     display: flex;
     flex-direction: column;
 }
+#api-details-title {
+    color: var(--color-secondary);
+    font-weight: 500;
+    margin-bottom: 0.2em;
+    letter-spacing: -.02em;
+    font-size: 1.4em;
+}
 
 #circle-advanced-options, #pixel-art-advanced-options {
     display: grid;
