@@ -387,20 +387,58 @@
                     <input type="file" name="details-level" id="details-level">
                 </div>
             </div>
-            <div id="details-output">
+            <div id="details-output" class="details-output">
                 <div>
-                    <span id="details-name"></span>
-                    <span id="details-author_name"></span>
+                    <span id="details-name" class="details-name"></span>
+                    <span id="details-author_name" class="details-author_name"></span>
                     <div>
-                        <span id="details-player_count"></span>
-                        <span id="details-game_mode"></span>
-                        <span id="details-theme"></span>
+                        <span id="details-player_count" class="details-player_count"></span>
+                        <span id="details-game_mode" class="details-game_mode"></span>
+                        <span id="details-theme" class="details-theme"></span>
                     </div>
                 </div>
                 <div>
-                    <span id="details-nodes"></span>
-                    <span id="details-animations"></span>
-                    <span id="details-nodes-by-type"></span>
+                    <span id="details-nodes" class="details-nodes"></span>
+                    <span id="details-animations" class="details-animations"></span>
+                    <span id="details-nodes-by-type" class="details-nodes-by-type"></span>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="tool" id="api-details">
+                <h2>Level Details (API)</h2>
+                <p>
+                    View details and stats about the content of an online level.
+                </p>
+                <div class="file">
+                    <input type="text" id="api-details-id" name="api-details-id" placeholder="Level ID">
+                </div>
+                <button id="api-details-button">Get Details</button>
+            </div>
+            <div class="api-details">
+                <div id="api-details-output" class="details-output">
+                    <div>
+                        <span id="api-details-name" class="details-name"></span>
+                        <span id="api-details-author_name" class="details-author_name"></span>
+                        <div>
+                            <span id="api-details-player_count" class="details-player_count"></span>
+                            <span id="api-details-game_mode" class="details-game_mode"></span>
+                            <span id="api-details-theme" class="details-theme"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <span id="api-details-nodes" class="details-nodes"></span>
+                        <span id="api-details-animations" class="details-animations"></span>
+                        <span id="api-details-nodes-by-type" class="details-nodes-by-type"></span>
+                    </div>
+                </div>
+                <div class="details-output">
+                    <h3 id="api-details-title"></h3>
+                    <span id="api-details-player_count"></span>
+                    <span id="api-details-create_time"></span>
+                    <span id="api-details-update_time"></span>
+                    <span id="api-details-rating"></span>
+                    <span id="api-details-rating_count"></span>
                 </div>
             </div>
         </section>

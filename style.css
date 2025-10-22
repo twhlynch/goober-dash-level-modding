@@ -209,7 +209,7 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 footer {
@@ -411,14 +411,14 @@ a:hover {
 
 /* details output */
 
-#details-output {
+.details-output {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
     margin-block: 1em;
 }
-#details-output > div {
+.details-output > div {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -426,7 +426,7 @@ a:hover {
     margin-block: 1em;
 }
 
-#details-name {
+.details-name {
     color: var(--color-primary);
     text-shadow: 2px 2px 0 var(--color-highlight);
     line-height: 1.2;
@@ -436,7 +436,7 @@ a:hover {
     font-size: 2.6em;
 }
 
-#details-author_name {
+.details-author_name {
     color: var(--color-secondary);
     font-weight: 500;
     margin-bottom: 0.2em;
@@ -444,7 +444,7 @@ a:hover {
     font-size: 1.4em;
 }
 
-#details-player_count {
+.details-player_count {
     color: var(--color-secondary);
     font-weight: 500;
     margin-bottom: 0.2em;
@@ -452,7 +452,7 @@ a:hover {
     font-size: 1em;
 }
 
-#details-game_mode {
+.details-game_mode {
     color: var(--color-secondary);
     font-weight: 500;
     margin-bottom: 0.2em;
@@ -460,7 +460,7 @@ a:hover {
     font-size: 1em;
 }
 
-#details-theme {
+.details-theme {
     color: var(--color-secondary);
     font-weight: 500;
     margin-bottom: 0.2em;
@@ -468,7 +468,7 @@ a:hover {
     font-size: 1em;
 }
 
-#details-nodes, #details-animations {
+.details-nodes, .details-animations {
     color: var(--color-secondary);
     font-weight: 500;
     margin-bottom: 0.2em;
@@ -476,7 +476,7 @@ a:hover {
     font-size: 1.2em;
 }
 
-#details-nodes-by-type {
+.details-nodes-by-type {
     display: grid;
     grid-template-columns: auto auto auto;
     gap: 0.4em;
@@ -492,6 +492,11 @@ a:hover {
         background: #8d85e430;
         border-radius: 5px;
     }
+}
+
+.api-details {
+    display: flex;
+    flex-direction: column;
 }
 
 #circle-advanced-options, #pixel-art-advanced-options {
@@ -554,9 +559,8 @@ a:hover {
     }
 }
 
-textarea {
+textarea, input[type="text"] {
     width: 100%;
-    height: 10em;
     padding: 0.5em;
     border: 2px solid var(--color-highlight);
     border-radius: 5px;
@@ -565,6 +569,9 @@ textarea {
     font-family: "Baloo 2", sans-serif;
     font-size: 1em;
     line-height: 1.6;
+}
+textarea {
+    height: 10em;
     resize: none;
 }
 

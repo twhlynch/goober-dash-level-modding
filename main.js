@@ -1318,6 +1318,75 @@ function getLevelDetails() {
     reader.readAsText(file);
 }
 
+async function getLevelDetailsOnline() {
+    const id = document.getElementById("api-details-id").value;
+    const output = document.getElementById("details-output");
+
+    const response = await fetch("https://goober-dash-api-proxy.twhlynch.workers.dev/levels_editor_get", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: id,
+            player_id: "",
+        }),
+    });
+    const responseJSON = await response.json();
+
+    const statsKeys = {
+        "player_count": "Plays",
+        "create_time": "Created",
+        "update_time": "Updated",
+        "rating": "Rating",
+        "rating_count": "Ratings",
+    };
+    for (const key in statsKeys) {
+        let value = responseJSON[key];
+        if (key.endsWith("_time")) {
+            value = new Date(value).toDateString();
+        }
+        document.getElementById("api-details-" + key).innerText = statsKeys[key] + ": " + value;
+    }
+    document.getElementById("api-details-title").innerText = "Stats";
+
+    const levelJSON = responseJSON.data;
+    const level = new Level(levelJSON);
+
+    for (const key in level.metadata) {
+        const element = document.getElementById(`api-details-${key}`);
+
+        if (element) {
+            element.innerText = level.metadata[key];
+        }
+    }
+
+    const statistics = {
+        "nodes": 0,
+        "nodesByType": {},
+        "animations": 0
+    };
+
+    for (const node of level.nodes) {
+        statistics.nodes++;
+        if (statistics.nodesByType[node.type]) {
+            statistics.nodesByType[node.type]++;
+        } else {
+            statistics.nodesByType[node.type] = 1;
+        }
+        if (node.animation && Object.keys(node.animation).length !== 0) {
+            statistics.animations++;
+        }
+    }
+
+    document.getElementById("api-details-nodes").innerText = statistics.nodes + " objects";
+    document.getElementById("api-details-animations").innerText = statistics.animations + " animation" + (statistics.animations == 1 ? "" : "s");
+    document.getElementById("api-details-nodes-by-type").innerHTML = "";
+    for (const type in statistics.nodesByType) {
+        document.getElementById("api-details-nodes-by-type").innerHTML += "<span><span>" + type.replaceAll("_", " ") + "</span><span>" + statistics.nodesByType[type] + "</span></span> ";
+    }
+}
+
 //#region Statistics
 const api_url = "https://goober-dash-stats-api.onrender.com";
 
@@ -1593,6 +1662,7 @@ function createLeaderboards() {
 init();
 
 document.getElementById("details-level").addEventListener("change", getLevelDetails);
+document.getElementById("api-details-button").addEventListener("click", getLevelDetailsOnline);
 
 document.getElementById("generate-grid").addEventListener("click", generateGrid);
 document.getElementById("generate-pixel-art").addEventListener("click", generatePixelArt);
