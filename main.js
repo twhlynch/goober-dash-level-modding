@@ -813,7 +813,7 @@ function modifyMirrorLevel() {
 }
 
 function modifyScaleLevel() {
-    const scale = parseInt(document.getElementById("scale-level-scale").value);
+    const scale = parseFloat(document.getElementById("scale-level-scale").value);
     const file = document.getElementById("scale-level-level").files[0];
 
     const reader = new FileReader();
